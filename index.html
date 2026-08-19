@@ -824,6 +824,143 @@ window.onload = function() {
         entrarAlSistema();
     }
 };
+            // ========================================
+        // ✅ CIERRE DE CAJA DIARIO — PROBLEMA 2 RESUELTO
+        // ========================================
+        
+        // Actualiza los totales de caja en pantalla
+        async function actualizarCaja() {
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
+            const manana = new Date(hoy);
+            manana.setDate(manana.getDate() + 1);
+
+            try {
+                const snapshot = await db.collection('ventas')
+                    .where('fecha', '>=', hoy)
+                    .where('fecha', '<', manana)
+                    .where('cajeroUid', '==', usuarioActivo.uid)
+                    .get();
+
+                let totalVentas = 0;
+                let totalProductos = 0;
+                let cantidadVentas = 0;
+
+                snapshot.forEach(doc => {
+                    const v = doc.data();
+                    totalVentas += v.total;
+                    v.productos.forEach(p => totalProductos += p.cantidad);
+                    cantidadVentas++;
+                });
+
+                // Actualizar en pantalla
+                const elVentasDia = document.getElementById('cajaVentasDia');
+                const elProductos = document.getElementById('cajaProductos');
+                const elTotal = document.getElementById('cajaTotal');
+
+                if (elVentasDia) elVentasDia.textContent = `$${totalVentas.toFixed(2)}`;
+                if (elProductos) elProductos.textContent = totalProductos;
+                if (elTotal) elTotal.textContent = `$${totalVentas.toFixed(2)}`;
+
+            } catch (e) {
+                console.error('❌ Error actualizando caja:', e);
+            }
+        }
+
+        // Realizar el cierre de caja del día
+        async function cerrarCaja() {
+            if (!confirm('⚠️ ¿CONFIRMAR CIERRE DE CAJA DIARIO?\n\n✅ Se calcularán todas las ventas de hoy.\n✅ Se guardará el registro permanentemente.\n⚠️ Una vez hecho, NO se puede modificar.\n\n¿Continuar?')) {
+                return;
+            }
+
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
+            const manana = new Date(hoy);
+            manana.setDate(manana.getDate() + 1);
+
+            try {
+                const snapshot = await db.collection('ventas')
+                    .where('fecha', '>=', hoy)
+                    .where('fecha', '<', manana)
+                    .where('cajeroUid', '==', usuarioActivo.uid)
+                    .get();
+
+                let totalVentas = 0;
+                let totalProductos = 0;
+                const ventasDetalle = [];
+
+                snapshot.forEach(doc => {
+                    const v = doc.data();
+                    totalVentas += v.total;
+                    v.productos.forEach(p => totalProductos += p.cantidad);
+                    ventasDetalle.push({ id: doc.id, ...v });
+                });
+
+                // Guardar el cierre en Firestore
+                await db.collection('cierresCaja').add({
+                    fechaCorte: firebase.firestore.FieldValue.serverTimestamp(),
+                    fecha: new Date(),
+                    cajero: usuarioActivo.usuario,
+                    cajeroUid: usuarioActivo.uid,
+                    totalVentas: totalVentas,
+                    totalProductos: totalProductos,
+                    cantidadVentas: ventasDetalle.length,
+                    detalleVentas: ventasDetalle
+                });
+
+                // Mensaje de confirmación
+                alert(`✅ === CIERRE DE CAJA REALIZADO ===\n\n📅 Fecha: ${new Date().toLocaleDateString('es-MX')}\n👤 Cajero: ${usuarioActivo.usuario}\n💰 TOTAL VENTAS: $${totalVentas.toFixed(2)}\n📦 Productos vendidos: ${totalProductos}\n🧾 Ventas realizadas: ${ventasDetalle.length}\n\n✅ ¡Cierre guardado exitosamente!`);
+
+                // Recargar datos
+                await cargarCierres();
+                await actualizarCaja();
+
+            } catch (e) {
+                console.error('❌ Error en cierre de caja:', e);
+                alert('❌ Error al realizar cierre: ' + e.message);
+            }
+        }
+
+        // Cargar historial de cierres
+        async function cargarCierres() {
+            const tabla = document.getElementById('listaCierres');
+            if (!tabla) return;
+            tabla.innerHTML = '';
+
+            try {
+                const snapshot = await db.collection('cierresCaja')
+                    .orderBy('fechaCorte', 'desc')
+                    .where('cajeroUid', '==', usuarioActivo.uid)
+                    .limit(30)
+                    .get();
+
+                if (snapshot.empty) {
+                    tabla.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#94a3b8; padding:2rem;">📭 No hay cierres de caja registrados</td></tr>';
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const c = doc.data();
+                    const fecha = c.fechaCorte?.toDate() || new Date();
+                    tabla.innerHTML += `
+                        <tr>
+                            <td>${fecha.toLocaleDateString('es-MX')} ${fecha.toLocaleTimeString('es-MX', {hour:'2-digit', minute:'2-digit'})}</td>
+                            <td>${c.cajero}</td>
+                            <td>$${(c.totalVentas || 0).toFixed(2)}</td>
+                            <td>${c.totalProductos || 0}</td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                console.error('❌ Error cargando cierres:', e);
+            }
+        }
+
+        // Imprimir reporte de cierre
+        function imprimirCierre() {
+            alert('🖨️ Generando reporte de cierre de caja...\n\nSe abrirá la ventana de impresión.');
+            window.print();
+        }
 </script>
 
 </body>

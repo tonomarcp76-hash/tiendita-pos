@@ -363,6 +363,10 @@
         </div><br>
         <button class="btn-agregar" onclick="generarCierre()" style="font-size: 18px; padding: 15px 40px;">✅ GENERAR CIERRE DE CAJA</button>
     </div>
+        // ✅ === REINICIAR LOS NÚMEROS A CERO DESPUÉS DEL CIERRE ===
+    document.getElementById('cierre-total').textContent = '$0.00';
+    document.getElementById('cierre-cantidad').textContent = '0';
+    // ===========================================================
 
     <!-- ========== USUARIOS ========== -->
     <div id="seccion-usuarios" class="seccion">

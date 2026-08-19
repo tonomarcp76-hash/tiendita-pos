@@ -4,862 +4,653 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🏪 Tiendita - Punto de Venta</title>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-           
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, Arial, sans-serif; }
         :root {
-            --primario: #2563eb; --secundario: #1e40af; --exito: #22c55e;
-            --peligro: #ef4444; --fondo: #f8fafc; --blanco: #ffffff; --texto: #1f2937;
-            --borde: #e5e7eb; --gris: #9ca3af; --naranja: #f97316;
+            --primario: #2563eb; --secundario: #1e40af; --exito: #16a34a;
+            --advertencia: #f59e0b; --peligro: #dc2626; --fondo: #f1f5f9;
+            --blanco: #ffffff; --texto: #1e293b; --gris: #94a3b8;
         }
-        body { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); min-height: 100vh; padding: 15px; }
-        .contenedor { max-width: 1400px; margin: 0 auto; }
-        .carrito-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0.75rem 0; border-bottom: 1px solid #e2e8f0;
-            flex-wrap: wrap; gap: 0.5rem; min-height: 60px;
+        body { background: var(--fondo); min-height: 100vh; }
+        .oculto { display: none !important; }
+        
+        /* === PANTALLA DE LOGIN === */
+        .login-container {
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, var(--primario), var(--secundario));
+            padding: 20px;
         }
-        .carrito-item .cantidad-controles {
-            display: flex; align-items: center; gap: 0.75rem; min-width: 120px; justify-content: center;
-        }
-        .carrito-item .cantidad-controles button {
-            width: 32px; height: 32px; border: none; border-radius: 50%; cursor: pointer;
-            font-weight: bold; font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
-            background: var(--primario); color: white;
-        }
-        .carrito-item .cantidad-controles span {
-            font-size: 1.2rem; font-weight: 700; min-width: 30px; text-align: center; color: var(--texto);
-        }
-        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid #e2e8f0; }
-        td:nth-child(3), th:nth-child(3),
-        td:nth-child(4), th:nth-child(4) { width: 90px; text-align: center; }
-       
         .login-card {
-            max-width: 420px; margin: 60px auto; background: var(--blanco);
-            padding: 35px; border-radius: 16px; box-shadow: 0 10px 40px rgba(37, 99, 235, 0.15);
+            background: var(--blanco); padding: 40px 30px; border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2); width: 100%; max-width: 420px;
         }
-        .login-card h1 { text-align: center; color: var(--primario); margin-bottom: 25px; font-size: 26px; }
-        .tabs { display: flex; margin-bottom: 20px; border-bottom: 2px solid var(--borde); }
-        .tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; font-weight: 600; color: var(--gris); transition: all 0.2s; }
-        .tab.activa { color: var(--primario); border-bottom: 3px solid var(--primario); }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: 500; color: var(--texto); font-size: 14px; }
-        input, select {
-            width: 100%; padding: 12px 14px; border: 2px solid var(--borde);
-            border-radius: 8px; font-size: 15px; transition: border 0.2s;
+        .login-card h1 { text-align: center; color: var(--primario); margin-bottom: 30px; font-size: 28px; }
+        .tabs { display: flex; margin-bottom: 25px; border-bottom: 2px solid #e2e8f0; }
+        .tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; font-weight: 600; color: var(--gris); }
+        .tab.activa { color: var(--primario); border-bottom: 3px solid var(--primario); margin-bottom: -2px; }
+        .grupo-input { margin-bottom: 20px; }
+        .grupo-input label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--texto); }
+        .grupo-input input {
+            width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 8px;
+            font-size: 16px; transition: border-color 0.3s;
         }
-        input:focus, select:focus { outline: none; border-color: var(--primario); }
+        .grupo-input input:focus { outline: none; border-color: var(--primario); }
         .btn {
-            width: 100%; padding: 13px; border: none; border-radius: 8px;
-            font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.1s;
+            width: 100%; padding: 14px; border: none; border-radius: 8px;
+            font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.2s;
         }
         .btn:active { transform: scale(0.98); }
-        .btn-primario { background: linear-gradient(135deg, var(--primario), var(--secundario)); color: white; }
-        .btn-exito { background: var(--exito); color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; }
-        .btn-peligro { background: var(--peligro); color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; }
-        .mensaje { margin-top: 12px; padding: 10px; border-radius: 6px; text-align: center; font-weight: 500; display: none; font-size: 14px; }
-        .mensaje.exito { background: #dcfce7; color: #166534; display: block; }
-        .mensaje.error { background: #fee2e2; color: #991b1b; display: block; }
-        .oculto { display: none !important; }
-       
-        .barra-superior {
-            background: var(--blanco); padding: 15px 20px; border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 15px;
-            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+        .btn-primario { background: var(--primario); color: white; }
+        .btn-exito { background: var(--exito); color: white; }
+        
+        /* === SISTEMA PRINCIPAL === */
+        .header {
+            background: var(--blanco); padding: 15px 30px; display: flex;
+            justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-        .barra-superior h2 { font-size: 20px; color: var(--primario); }
-        .usuario-info { display: flex; align-items: center; gap: 12px; }
-        .btn-salir { background: var(--peligro); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; }
-        .navegacion { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
-        .btn-nav {
-            padding: 12px 18px; border: 2px solid var(--primario); background: white;
-            color: var(--primario); border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.2s; font-size: 15px;
+        .nav-botones { display: flex; gap: 10px; flex-wrap: wrap; }
+        .nav-btn {
+            padding: 10px 18px; border: none; border-radius: 8px;
+            background: #e2e8f0; color: var(--texto); font-weight: 500; cursor: pointer; transition: all 0.2s;
         }
-        .btn-nav.activo, .btn-nav:hover { background: var(--primario); color: white; }
-        .seccion { display: none; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .seccion.activa { display: block; }
-       
-        .ventas-layout { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; }
-        @media (max-width: 900px) { .ventas-layout { grid-template-columns: 1fr; } }
-       
-        .productos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
-        .producto-tarjeta {
-            background: var(--fondo); border: 2px solid var(--borde); border-radius: 10px;
-            padding: 12px; text-align: center; cursor: pointer; transition: all 0.2s;
+        .nav-btn.activo, .nav-btn:hover { background: var(--primario); color: white; }
+        .contenido { padding: 30px; max-width: 1400px; margin: 0 auto; }
+        .vista { display: none; }
+        .vista.activa { display: block; }
+        .tarjeta {
+            background: var(--blanco); padding: 25px; border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px;
         }
-        .producto-tarjeta:hover { border-color: var(--primario); transform: translateY(-2px); background: #eff6ff; }
-        .producto-tarjeta .nombre { font-weight: 600; font-size: 14px; margin-bottom: 6px; color: var(--texto); }
-        .producto-tarjeta .precio { font-size: 18px; font-weight: 700; color: var(--exito); }
-        .carrito { background: var(--fondo); border-radius: 10px; padding: 15px; }
-        .carrito h3 { font-size: 18px; color: var(--primario); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--borde); }
-        .item-carrito { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--borde); }
-        .item-carrito .cantidad { display: flex; align-items: center; gap: 8px; }
-        .item-carrito button { width: 26px; height: 26px; border: none; border-radius: 50%; background: var(--primario); color: white; cursor: pointer; font-weight: bold; font-size: 16px; display: flex; align-items: center; justify-content: center; }
-        .btn-quitar { background: var(--peligro); font-size: 12px; width: 22px; height: 22px; }
-       
-        .total-final { font-size: 36px; font-weight: 700; color: var(--exito); text-align: right; margin: 15px 0; }
-        .botones-venta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
-        .btn-cobrar { background: var(--exito); color: white; border: none; padding: 14px 25px; border-radius: 8px; font-size: 18px; font-weight: 700; cursor: pointer; flex: 1; min-width: 200px; }
-        .btn-cancelar { background: var(--gris); color: white; border: none; padding: 14px 25px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; }
-        .btn-caja { background: var(--naranja); color: white; border: none; padding: 14px 25px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; }
-       
-        .ticket {
-            width: 80mm; padding: 3mm; background: white; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.5; display: none;
+        .fila { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
+        .campo { flex: 1; min-width: 200px; }
+        .campo label { display: block; margin-bottom: 6px; font-weight: 500; }
+        .campo input, .campo select {
+            width: 100%; padding: 10px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 15px;
         }
-        .ticket.visible { display: block; }
-        .ticket .centro { text-align: center; }
-        .ticket .linea { border-bottom: 1px dashed #000; margin: 4px 0; }
-        .ticket .negrita { font-weight: bold; }
-        .ticket .grande { font-size: 16px; font-weight: bold; }
-        .ticket .fila-doble { display: flex; justify-content: space-between; }
-       
-        @media print {
-            body * { visibility: hidden; }
-            .ticket, .ticket * { visibility: visible; }
-            .ticket { position: absolute; left: 0; top: 0; width: 80mm !important; display: block !important; }
-            @page { size: 80mm auto; margin: 0; }
+        .btn-accion {
+            padding: 10px 16px; border: none; border-radius: 6px; cursor: pointer;
+            font-weight: 600; margin-right: 8px; margin-bottom: 8px;
         }
-       
-        .grid-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .btn-agregar { background: var(--exito); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 15px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th { background: #f8fafc; font-weight: 600; color: var(--primario); }
-        .btn-eliminar { background: var(--peligro); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; }
-       
-        .formulario-compra, .carrito-compra {
-            background: white; padding: 2rem; border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 2rem;
-        }
-        .fila-form {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;
-        }
-        .campo label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--texto); }
-        .input-campo, .input-select {
-            width: 100%; padding: 0.85rem 1rem; border: 2px solid var(--borde);
-            border-radius: 8px; font-size: 1rem; transition: border-color 0.2s;
-        }
-        .input-campo:focus, .input-select:focus { outline: none; border-color: var(--primario); }
-        .compra-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 1rem 0; border-bottom: 1px solid var(--borde); flex-wrap: wrap; gap: 0.5rem;
-        }
-        .compra-item .info { flex: 1; min-width: 200px; }
-        .compra-item .subtotal { font-weight: 700; color: var(--exito); font-size: 1.1rem; }
-        .total-compra {
-            margin-top: 1.5rem; padding: 1.25rem;
-            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-            border-radius: 8px; text-align: right; font-size: 1.4rem; color: var(--exito);
-        }
-        .sin-datos { text-align: center; color: var(--gris); padding: 2rem; }
+        .btn-verde { background: var(--exito); color: white; }
+        .btn-azul { background: var(--primario); color: white; }
+        .btn-rojo { background: var(--peligro); color: white; }
+        .btn-naranja { background: var(--advertencia); color: white; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background: #f8fafc; font-weight: 600; }
+        .total-grande { font-size: 32px; font-weight: 700; color: var(--exito); text-align: right; margin-top: 20px; }
+        .usuario-actual { font-weight: 600; color: var(--primario); }
     </style>
+
+    <!-- === FIREBASE === -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 </head>
 <body>
-<div class="contenedor">
 
-<!-- ====================== LOGIN ====================== -->
-<div id="pantalla-login">
-    <div class="login-card">
-        <h1>🏪 TIENDITA - PUNTO DE VENTA</h1>
-        <div class="tabs">
-            <div class="tab activa" onclick="cambiarTab('login')">Iniciar Sesión</div>
-            <div class="tab" onclick="cambiarTab('registro')">Registrar Usuario</div>
-        </div>
-        <div id="form-login">
-            <div class="form-group">
-                <label>Usuario</label>
-                <input type="text" id="usuario-login" placeholder="Tu usuario">
+    <!-- ====================================== -->
+    <!-- PANTALLA DE INICIO DE SESIÓN / REGISTRO -->
+    <!-- ====================================== -->
+    <div class="login-container" id="pantallaLogin">
+        <div class="login-card">
+            <h1>🏪 TIENDITA - PUNTO DE VENTA</h1>
+            
+            <div class="tabs">
+                <div class="tab activa" id="tabLogin" onclick="cambiarTab('login')">Iniciar Sesión</div>
+                <div class="tab" id="tabRegistro" onclick="cambiarTab('registro')">Registrar Usuario</div>
             </div>
-            <div class="form-group">
-                <label>Contraseña</label>
-                <input type="password" id="pass-login" placeholder="Tu contraseña">
+
+            <!-- FORMULARIO LOGIN -->
+            <div id="formLogin">
+                <div class="grupo-input">
+                    <label>Usuario</label>
+                    <input type="text" id="usuarioLogin" placeholder="Tu usuario">
+                </div>
+                <div class="grupo-input">
+                    <label>Contraseña</label>
+                    <input type="password" id="passLogin" placeholder="Tu contraseña">
+                </div>
+                <button class="btn btn-primario" onclick="iniciarSesion()">🔑 INGRESAR AL SISTEMA</button>
             </div>
-            <button class="btn btn-primario" onclick="iniciarSesion()">🔑 INGRESAR AL SISTEMA</button>
-            <div id="mensaje-login" class="mensaje"></div>
-        </div>
-        <div id="form-registro" class="oculto">
-            <div class="form-group">
-                <label>Nombre Completo</label>
-                <input type="text" id="nombre-completo" placeholder="Tu nombre">
+
+            <!-- FORMULARIO REGISTRO -->
+            <div id="formRegistro" class="oculto">
+                <div class="grupo-input">
+                    <label>Usuario Nuevo</label>
+                    <input type="text" id="usuarioReg" placeholder="Crea tu usuario">
+                </div>
+                <div class="grupo-input">
+                    <label>Contraseña</label>
+                    <input type="password" id="passReg" placeholder="Crea tu contraseña (mínimo 6 caracteres)">
+                </div>
+                <button class="btn btn-exito" onclick="registrarUsuario()">✅ REGISTRARME</button>
             </div>
-            <div class="form-group">
-                <label>Usuario</label>
-                <input type="text" id="usuario-reg" placeholder="Crea tu usuario">
-            </div>
-            <div class="form-group">
-                <label>Rol</label>
-                <select id="rol-reg">
-                    <option value="administrador">Administrador</option>
-                    <option value="cajero">Cajero/a</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Contraseña (mín. 6 caracteres)</label>
-                <input type="password" id="pass-reg" placeholder="Contraseña">
-            </div>
-            <div class="form-group">
-                <label>Confirmar Contraseña</label>
-                <input type="password" id="pass-conf" placeholder="Repite contraseña">
-            </div>
-            <button class="btn btn-primario" onclick="registrarUsuario()">✅ REGISTRARME</button>
-            <div id="mensaje-reg" class="mensaje"></div>
         </div>
     </div>
-</div>
 
-<!-- ====================== PANEL PRINCIPAL ====================== -->
-<div id="panel-principal" class="oculto">
-    <div class="barra-superior">
-        <h2>🏪 TIENDITA - PUNTO DE VENTA</h2>
-        <div class="usuario-info">
-            <span id="nombre-usuario"></span>
-            <button class="btn-salir" onclick="cerrarSesion()">🚪 Cerrar Sesión</button>
-        </div>
-    </div>
-    <div class="navegacion">
-        <button class="btn-nav activo" onclick="cambiarSeccion('ventas')">💰 Ventas</button>
-        <button class="btn-nav" onclick="cambiarSeccion('compras')">📥 Compras</button>
-        <button class="btn-nav" onclick="cambiarSeccion('catalogo')">📦 Catálogo</button>
-        <button class="btn-nav" onclick="cambiarSeccion('reportes')">📊 Reportes</button>
-        <button class="btn-nav" onclick="cambiarSeccion('cierre')">🧾 Cierre de Caja</button>
-        <button class="btn-nav" onclick="cambiarSeccion('usuarios')">👤 Usuarios</button>
-    </div>
-
-    <!-- ========== VENTAS ========== -->
-    <div id="seccion-ventas" class="seccion activa">
-        <h2>💰 PUNTO DE VENTA</h2><br>
-        <div class="ventas-layout">
+    <!-- ====================================== -->
+    <!-- SISTEMA PRINCIPAL -->
+    <!-- ====================================== -->
+    <div id="sistemaPrincipal" class="oculto">
+        <header class="header">
+            <h2>🏪 Tiendita - Punto de Venta</h2>
             <div>
-                <h3>📋 Productos Disponibles</h3><br>
-                <div class="productos-grid" id="grid-productos"></div>
+                <span class="usuario-actual" id="nombreUsuario"></span>
+                <button class="nav-btn" onclick="cerrarSesion()" style="margin-left:15px;">🚪 Cerrar Sesión</button>
             </div>
-            <div class="carrito">
-                <h3>🛒 CARRITO</h3>
-                <div id="lista-carrito">
-                    <p style="color: var(--gris); text-align: center; padding: 20px;">Agrega productos...</p>
-                </div>
-                <div class="total-final">$0.00</div>
-                <div class="botones-venta">
-                    <button class="btn-caja" onclick="abrirCaja()">💵 ABRIR CAJA</button>
-                    <button class="btn-cancelar" onclick="limpiarCarrito()">🗑️ CANCELAR</button>
-                    <button class="btn-cobrar" onclick="cobrarVenta()">✅ COBRAR E IMPRIMIR</button>
+        </header>
+
+        <nav class="header" style="justify-content: center; gap:10px; flex-wrap: wrap;">
+            <button class="nav-btn activo" onclick="mostrarVista('ventas')" id="btn-nav-ventas">🛒 Ventas</button>
+            <button class="nav-btn" onclick="mostrarVista('catalogo')" id="btn-nav-catalogo">📦 Catálogo</button>
+            <button class="nav-btn" onclick="mostrarVista('compras')" id="btn-nav-compras">📥 Compras</button>
+            <button class="nav-btn" onclick="mostrarVista('reportes')" id="btn-nav-reportes">📊 Reportes</button>
+            <button class="nav-btn" onclick="mostrarVista('cierre')" id="btn-nav-cierre">💰 Cierre de Caja</button>
+        </nav>
+
+        <main class="contenido">
+            <!-- ===== VENTAS ===== -->
+            <div class="vista activa" id="vista-ventas">
+                <div class="tarjeta">
+                    <h2>🛒 Nueva Venta</h2>
+                    <div class="fila">
+                        <div class="campo">
+                            <label>Buscar Producto</label>
+                            <input type="text" id="buscarProducto" placeholder="Escribe nombre o código..." oninput="buscarEnCatalogo()">
+                        </div>
+                        <div class="campo">
+                            <label>Cantidad</label>
+                            <input type="number" id="cantidadVenta" value="1" min="1">
+                        </div>
+                        <button class="btn-accion btn-verde" onclick="agregarAVenta()">➕ Agregar</button>
+                    </div>
+                    
+                    <table id="tablaVenta">
+                        <thead><tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Subtotal</th><th>Acción</th></tr></thead>
+                        <tbody id="cuerpoVenta"></tbody>
+                    </table>
+                    
+                    <div class="total-grande">Total: $<span id="totalVenta">0.00</span></div>
+                    
+                    <div style="margin-top:25px; display:flex; gap:15px; flex-wrap:wrap;">
+                        <button class="btn-accion btn-verde" style="font-size:18px; padding:15px 30px;" onclick="cobrarVenta()">💵 COBRAR E IMPRIMIR TICKET</button>
+                        <button class="btn-accion btn-azul" style="font-size:18px; padding:15px 30px;" onclick="abrirCaja()">🔓 ABRIR CAJA</button>
+                        <button class="btn-accion btn-naranja" style="font-size:18px; padding:15px 30px;" onclick="limpiarVenta()">🗑️ NUEVA VENTA</button>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            <!-- ===== CATÁLOGO ===== -->
+            <div class="vista" id="vista-catalogo">
+                <div class="tarjeta">
+                    <h2>📦 Catálogo de Productos</h2>
+                    <div class="fila">
+                        <div class="campo"><label>Nombre</label><input type="text" id="prodNombre"></div>
+                        <div class="campo"><label>Precio Venta</label><input type="number" id="prodPrecio" step="0.01"></div>
+                        <div class="campo"><label>Stock</label><input type="number" id="prodStock" min="0"></div>
+                        <button class="btn-accion btn-verde" onclick="guardarProducto()">💾 Guardar Producto</button>
+                    </div>
+                    <table id="tablaCatalogo">
+                        <thead><tr><th>Nombre</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr></thead>
+                        <tbody id="cuerpoCatalogo"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ===== COMPRAS ===== -->
+            <div class="vista" id="vista-compras">
+                <div class="tarjeta">
+                    <h2>📥 Registro de Compras / Entradas</h2>
+                    <div class="fila">
+                        <div class="campo"><label>Producto</label><input type="text" id="compraNombre"></div>
+                        <div class="campo"><label>Cantidad</label><input type="number" id="compraCantidad" min="1"></div>
+                        <div class="campo"><label>Precio Compra</label><input type="number" id="compraPrecio" step="0.01"></div>
+                        <button class="btn-accion btn-verde" onclick="registrarCompra()">✅ Registrar Compra</button>
+                    </div>
+                    <table id="tablaCompras">
+                        <thead><tr><th>Fecha</th><th>Producto</th><th>Cantidad</th><th>Precio Unitario</th><th>Total</th></tr></thead>
+                        <tbody id="cuerpoCompras"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ===== REPORTES ===== -->
+            <div class="vista" id="vista-reportes">
+                <div class="tarjeta">
+                    <h2>📊 Reporte Semanal de Ventas</h2>
+                    <div id="contenidoReporte">
+                        <p style="font-size:18px; margin:10px 0;">Total Vendido Semanal: <strong style="color:var(--exito); font-size:24px;">$<span id="totalSemanal">0.00</span></strong></p>
+                        <p style="font-size:16px;">Ventas Realizadas: <strong id="cantidadVentas">0</strong></p>
+                    </div>
+                    <table id="tablaReportes">
+                        <thead><tr><th>Fecha</th><th>Hora</th><th>Productos</th><th>Total</th><th>Cajero</th></tr></thead>
+                        <tbody id="cuerpoReportes"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ===== CIERRE DE CAJA ===== -->
+            <div class="vista" id="vista-cierre">
+                <div class="tarjeta">
+                    <h2>💰 Cierre de Caja</h2>
+                    <div style="font-size:20px; line-height:2.5; margin:20px 0;">
+                        <p><strong>Fecha:</strong> <span id="cierre-fecha"></span></p>
+                        <p><strong>Cajero:</strong> <span id="cierre-cajero"></span></p>
+                        <p><strong>Total Ventas del Día:</strong> <span id="cierre-total" style="color:var(--exito); font-weight:bold;">$0.00</span></p>
+                        <p><strong>Ventas Realizadas:</strong> <span id="cierre-cantidad">0</span></p>
+                    </div>
+                    <button class="btn-accion btn-verde" style="font-size:18px; padding:15px 30px;" onclick="hacerCierre()">✅ HACER CIERRE DE CAJA</button>
+                    <button class="btn-accion btn-azul" style="font-size:18px; padding:15px 30px;" onclick="reiniciarCierre()">🔄 Reiniciar Conteo</button>
+                    
+                    <h3 style="margin-top:40px; border-top:2px solid #eee; padding-top:20px;">📜 Historial de Cierres</h3>
+                    <table id="tablaCierres">
+                        <thead><tr><th>Fecha</th><th>Cajero</th><th>Total</th><th>Ventas</th></tr></thead>
+                        <tbody id="cuerpoCierres"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
     </div>
 
-    <!-- ========== COMPRAS ========== -->
-    <div id="seccion-compras" class="seccion">
-        <h2>📥 REGISTRO DE COMPRAS</h2><br>
-        <div class="formulario-compra">
-            <div class="fila-form">
-                <div class="campo">
-                    <label>Proveedor</label>
-                    <input type="text" id="compra-proveedor" class="input-campo" placeholder="Nombre del proveedor">
-                </div>
-                <div class="campo">
-                    <label>Fecha</label>
-                    <input type="date" id="compra-fecha" class="input-campo">
-                </div>
-            </div>
-            <div class="fila-form">
-                <div class="campo">
-                    <label>Producto</label>
-                    <select id="compra-producto" class="input-select"></select>
-                </div>
-                <div class="campo">
-                    <label>Cantidad</label>
-                    <input type="number" id="compra-cantidad" min="1" class="input-campo" placeholder="Cantidad">
-                </div>
-                <div class="campo">
-                    <label>Costo Unitario ($)</label>
-                    <input type="number" id="compra-costo" step="0.01" min="0.01" class="input-campo" placeholder="Costo">
-                </div>
-                <div style="display:flex;align-items:flex-end;">
-                    <button class="btn-exito" onclick="agregarLineaCompra()">➕ Agregar</button>
-                </div>
-            </div>
-        </div>
+    <!-- ====================================== -->
+    <!-- JAVASCRIPT: FIREBASE + FUNCIONES -->
+    <!-- ====================================== -->
+    <script>
+        // === CONFIGURACIÓN FIREBASE ===
+        const firebaseConfig = {
+            apiKey: "AQUÍ-TU-API-KEY",
+            authDomain: "tu-proyecto.firebaseapp.com",
+            projectId: "tu-proyecto",
+            storageBucket: "tu-proyecto.appspot.com",
+            messagingSenderId: "1234567890",
+            appId: "1:1234567890:web:abc123def456"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
 
-        <h3>Detalle de Compra</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Producto</th>
-                    <th>Cantidad</th>
-                    <th>Costo Unitario</th>
-                    <th>Subtotal</th>
-                    <th>Acción</th>
-                </tr>
-            </thead>
-            <tbody id="tabla-compra-body"></tbody>
-        </table>
-        <div class="total-compra">Total: $<span id="compra-total">0.00</span></div>
-        <br>
-        <div style="display:flex; gap:10px;">
-            <button class="btn-agregar" onclick="guardarCompra()">💾 GUARDAR COMPRA</button>
-            <button class="btn-cancelar" onclick="limpiarCompra()">🗑️ LIMPIAR</button>
-        </div>
-    </div>
+        let usuarioActual = null;
+        let carrito = [];
+        let ventaTotal = 0;
 
-    <!-- ========== CATÁLOGO ========== -->
-    <div id="seccion-catalogo" class="seccion">
-        <h2>📦 CATÁLOGO DE PRODUCTOS</h2><br>
-        <div class="grid-form">
-            <div class="form-group">
-                <label>Nombre del Producto</label>
-                <input type="text" id="prod-nombre" placeholder="Ej: Refresco Coca 600ml">
-            </div>
-            <div class="form-group">
-                <label>Precio de Venta ($)</label>
-                <input type="number" id="prod-precio" step="0.01" placeholder="15.50">
-            </div>
-            <div class="form-group">
-                <label>Stock / Cantidad</label>
-                <input type="number" id="prod-stock" placeholder="50">
-            </div>
-            <div class="form-group">
-                <label>Categoría</label>
-                <select id="prod-cat">
-                    <option value="bebidas">Bebidas</option>
-                    <option value="abarrotes">Abarrotes</option>
-                    <option value="snacks">Snacks</option>
-                    <option value="lacteos">Lácteos</option>
-                    <option value="otros">Otros</option>
-                </select>
-            </div>
-        </div>
-        <button class="btn-agregar" onclick="agregarProducto()">➕ AGREGAR PRODUCTO</button>
-        <table id="tabla-productos">
-            <thead>
-                <tr><th>Nombre</th><th>Precio</th><th>Stock</th><th>Categoría</th><th>Acciones</th></tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <!-- ========== REPORTES ========== -->
-    <div id="seccion-reportes" class="seccion">
-        <h2>📊 REPORTES DE VENTAS</h2><br>
-        <p>Ventas del día: <strong id="ventas-dia">$0.00</strong></p><br>
-        <h3>Últimas Ventas</h3>
-        <table id="tabla-ventas">
-            <thead>
-                <tr><th>Fecha</th><th>Total</th><th>Cajero</th><th>Acciones</th></tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <!-- ========== CIERRE DE CAJA ========== -->
-    <div id="seccion-cierre" class="seccion">
-        <h2>🧾 CIERRE DE CAJA</h2><br>
-        <div style="font-size: 18px; line-height: 2;">
-            <p><strong>Fecha:</strong> <span id="cierre-fecha"></span></p>
-            <p><strong>Cajero:</strong> <span id="cierre-cajero"></span></p>
-            <p><strong>Total Ventas del Día:</strong> <span id="cierre-total" style="color: var(--exito); font-weight: bold;">$0.00</span></p>
-            <p><strong>Ventas Realizadas:</strong> <span id="cierre-cantidad">0</span></p>
-        </div><br>
-        <button class="btn-agregar" onclick="generarCierre()" style="font-size: 18px; padding: 15px 40px;">✅ GENERAR CIERRE DE CAJA</button>
-    </div>
-
-    <!-- ========== USUARIOS ========== -->
-    <div id="seccion-usuarios" class="seccion">
-        <h2>👤 GESTIÓN DE USUARIOS</h2><br>
-        <table id="tabla-usuarios">
-            <thead>
-                <tr><th>Nombre</th><th>Usuario</th><th>Rol</th><th>Fecha de Registro</th><th>Acciones</th></tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-</div>
-
-<!-- ========== TICKET DE IMPRESIÓN ========== -->
-<div class="ticket" id="ticket-impresion">
-    <div class="centro grande negrita">TIENDITA</div>
-    <div class="centro">RFC: XAXX010101000</div>
-    <div class="centro">Tel: 55-1234-5678</div>
-    <div class="linea"></div>
-    <div class="fila-doble"><span>Fecha:</span><span id="ticket-fecha"></span></div>
-    <div class="fila-doble"><span>Hora:</span><span id="ticket-hora"></span></div>
-    <div class="fila-doble"><span>Cajero:</span><span id="ticket-cajero"></span></div>
-    <div class="linea"></div>
-    <div id="ticket-articulos"></div>
-    <div class="linea"></div>
-    <div class="fila-doble negrita grande"><span>TOTAL</span><span id="ticket-total"></span></div>
-    <div class="linea"></div>
-    <div class="centro">¡Gracias por su compra!</div>
-    <div class="centro">--- Vuelva pronto ---</div>
-</div>
-
-</div>
-
-<script>
-// ===== FIREBASE =====
-const firebaseConfig = {
-    apiKey: "AIzaSySyBfHSLd7jqk7T6gcIMVXUJ87Y3njd3gWI",
-    authDomain: "punto-venta-tiendita.firebaseapp.com",
-    projectId: "punto-venta-tiendita",
-    storageBucket: "punto-venta-tiendita.firebasestorage.app",
-    messagingSenderId: "995895664919",
-    appId: "1:995895664919:web:99feec66f2793d18423f52"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-let usuarioActivo = null;
-let carrito = [];
-let productos = [];
-let lineasCompra = [];
-
-// ===== CAMBIAR PESTAÑA LOGIN =====
-function cambiarTab(tipo) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('activa'));
-    event.target.classList.add('activa');
-    if (tipo === 'login') {
-        document.getElementById('form-login').classList.remove('oculto');
-        document.getElementById('form-registro').classList.add('oculto');
-    } else {
-        document.getElementById('form-login').classList.add('oculto');
-        document.getElementById('form-registro').classList.remove('oculto');
-    }
-    limpiarMensajes();
-}
-function mostrarMensaje(id, texto, tipo) {
-    const div = document.getElementById(id);
-    div.textContent = texto;
-    div.className = `mensaje ${tipo}`;
-    setTimeout(() => div.className = 'mensaje', 5000);
-}
-function limpiarMensajes() {
-    document.getElementById('mensaje-login').className = 'mensaje';
-    document.getElementById('mensaje-reg').className = 'mensaje';
-}
-
-// ===== REGISTRAR USUARIO =====
-async function registrarUsuario() {
-    const nombre = document.getElementById('nombre-completo').value.trim();
-    const usuario = document.getElementById('usuario-reg').value.trim().toLowerCase();
-    const rol = document.getElementById('rol-reg').value;
-    const pass = document.getElementById('pass-reg').value;
-    const passConf = document.getElementById('pass-conf').value;
-    if (!nombre || !usuario || !pass || !passConf) {
-        mostrarMensaje('mensaje-reg', '⚠️ Llena todos los campos', 'error'); return;
-    }
-    if (pass.length < 6) {
-        mostrarMensaje('mensaje-reg', '⚠️ Contraseña mínimo 6 caracteres', 'error'); return;
-    }
-    if (pass !== passConf) {
-        mostrarMensaje('mensaje-reg', '⚠️ Las contraseñas no coinciden', 'error'); return;
-    }
-    try {
-        const existe = await db.collection('usuarios').where('usuario', '==', usuario).get();
-        if (!existe.empty) {
-            mostrarMensaje('mensaje-reg', '⚠️ Usuario ya existe', 'error'); return;
+        // === CAMBIAR TABS LOGIN ===
+        function cambiarTab(tipo) {
+            const tabLogin = document.getElementById('tabLogin');
+            const tabRegistro = document.getElementById('tabRegistro');
+            const formLogin = document.getElementById('formLogin');
+            const formRegistro = document.getElementById('formRegistro');
+            
+            if (tipo === 'login') {
+                tabLogin.classList.add('activa');
+                tabRegistro.classList.remove('activa');
+                formLogin.classList.remove('oculto');
+                formRegistro.classList.add('oculto');
+            } else {
+                tabRegistro.classList.add('activa');
+                tabLogin.classList.remove('activa');
+                formRegistro.classList.remove('oculto');
+                formLogin.classList.add('oculto');
+            }
         }
-        await db.collection('usuarios').add({
-            nombre, usuario, rol, contraseña: pass,
-            fechaRegistro: new Date()
-        });
-        mostrarMensaje('mensaje-reg', '✅ ¡Registrado! Ya puedes iniciar sesión', 'exito');
-        document.getElementById('nombre-completo').value = '';
-        document.getElementById('usuario-reg').value = '';
-        document.getElementById('pass-reg').value = '';
-        document.getElementById('pass-conf').value = '';
-        setTimeout(() => cambiarTab('login'), 2000);
-    } catch (e) {
-        mostrarMensaje('mensaje-reg', '❌ Error: ' + e.message, 'error');
-    }
-}
 
-// ===== INICIAR SESIÓN =====
-async function iniciarSesion() {
-    const usuario = document.getElementById('usuario-login').value.trim().toLowerCase();
-    const pass = document.getElementById('pass-login').value;
-    if (!usuario || !pass) {
-        mostrarMensaje('mensaje-login', '⚠️ Escribe usuario y contraseña', 'error'); return;
-    }
-    try {
-        const snapshot = await db.collection('usuarios')
-            .where('usuario', '==', usuario)
-            .where('contraseña', '==', pass)
-            .get();
-        if (snapshot.empty) {
-            mostrarMensaje('mensaje-login', '❌ Usuario o contraseña incorrectos', 'error'); return;
+        // === REGISTRAR USUARIO ===
+        async function registrarUsuario() {
+            const usuario = document.getElementById('usuarioReg').value.trim();
+            const pass = document.getElementById('passReg').value;
+            
+            if (!usuario || !pass) return alert('⚠️ Llena todos los campos');
+            if (pass.length < 6) return alert('⚠️ La contraseña debe tener al menos 6 caracteres');
+            
+            try {
+                await auth.createUserWithEmailAndPassword(usuario + '@tiendita.com', pass);
+                alert('✅ Usuario registrado con éxito! Ahora inicia sesión');
+                cambiarTab('login');
+                document.getElementById('usuarioReg').value = '';
+                document.getElementById('passReg').value = '';
+            } catch (error) {
+                alert('❌ Error: ' + error.message);
+            }
         }
-        snapshot.forEach(doc => {
-            usuarioActivo = { id: doc.id, ...doc.data() };
+
+        // === INICIAR SESIÓN ===
+        async function iniciarSesion() {
+            const usuario = document.getElementById('usuarioLogin').value.trim();
+            const pass = document.getElementById('passLogin').value;
+            
+            if (!usuario || !pass) return alert('⚠️ Llena todos los campos');
+            
+            try {
+                await auth.signInWithEmailAndPassword(usuario + '@tiendita.com', pass);
+            } catch (error) {
+                alert('❌ Error: ' + error.message);
+            }
+        }
+
+        // === CERRAR SESIÓN ===
+        async function cerrarSesion() {
+            await auth.signOut();
+            document.getElementById('pantallaLogin').classList.remove('oculto');
+            document.getElementById('sistemaPrincipal').classList.add('oculto');
+        }
+
+        // === VERIFICAR SESIÓN ACTIVA ===
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                usuarioActual = user.email.split('@')[0];
+                document.getElementById('pantallaLogin').classList.add('oculto');
+                document.getElementById('sistemaPrincipal').classList.remove('oculto');
+                document.getElementById('nombreUsuario').textContent = '👤 ' + usuarioActual;
+                cargarCatalogo();
+                cargarReportes();
+                cargarHistorialCierres();
+                actualizarFechaCierre();
+            }
         });
-        localStorage.setItem('usuarioActivo', JSON.stringify(usuarioActivo));
-        entrarAlSistema();
-    } catch (e) {
-        mostrarMensaje('mensaje-login', '❌ Error: ' + e.message, 'error');
-    }
-}
 
-function entrarAlSistema() {
-    document.getElementById('pantalla-login').classList.add('oculto');
-    document.getElementById('panel-principal').classList.remove('oculto');
-    document.getElementById('nombre-usuario').textContent = `${usuarioActivo.nombre} (${usuarioActivo.rol})`;
-    document.getElementById('cierre-fecha').textContent = new Date().toLocaleDateString('es-MX');
-    document.getElementById('cierre-cajero').textContent = usuarioActivo.nombre;
-    cargarProductos();
-    cargarUsuarios();
-    cargarVentas();
-}
+        // === NAVEGACIÓN ENTRE VISTAS ===
+        function mostrarVista(nombre) {
+            document.querySelectorAll('.vista').forEach(v => v.classList.remove('activa'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('activo'));
+            document.getElementById(`vista-${nombre}`).classList.add('activa');
+            document.getElementById(`btn-nav-${nombre}`).classList.add('activo');
+        }
 
-function cerrarSesion() {
-    usuarioActivo = null;
-    localStorage.removeItem('usuarioActivo');
-    document.getElementById('panel-principal').classList.add('oculto');
-    document.getElementById('pantalla-login').classList.remove('oculto');
-    document.getElementById('usuario-login').value = '';
-    document.getElementById('pass-login').value = '';
-    cambiarTab('login');
-    carrito = [];
-    actualizarCarrito();
-}
+        // === AGREGAR PRODUCTO A VENTA ===
+        function agregarAVenta() {
+            const nombre = document.getElementById('buscarProducto').value.trim();
+            const cantidad = parseInt(document.getElementById('cantidadVenta').value) || 1;
+            if (!nombre) return alert('Escribe el nombre del producto');
+            
+            db.collection('productos').where('nombre', '==', nombre).get().then(snap => {
+                if (snap.empty) return alert('Producto no encontrado');
+                snap.forEach(doc => {
+                    const prod = doc.data();
+                    const subtotal = prod.precio * cantidad;
+                    carrito.push({ id: doc.id, nombre: prod.nombre, precio: prod.precio, cantidad, subtotal });
+                    actualizarTablaVenta();
+                });
+            });
+            document.getElementById('buscarProducto').value = '';
+        }
 
-// ===== CAMBIAR SECCIÓN =====
-function cambiarSeccion(nombre) {
-    document.querySelectorAll('.btn-nav').forEach(b => b.classList.remove('activo'));
-    event.target.classList.add('activo');
-    document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
-    document.getElementById(`seccion-${nombre}`).classList.add('activa');
-    if (nombre === 'ventas') actualizarCarrito();
-    if (nombre === 'compras') { cargarProductosEnCompra(); limpiarCompra(); }
-    if (nombre === 'catalogo') cargarProductosTabla();
-    if (nombre === 'reportes') cargarVentas();
-}
+        // === ACTUALIZAR TABLA VENTA ===
+        function actualizarTablaVenta() {
+            const cuerpo = document.getElementById('cuerpoVenta');
+            cuerpo.innerHTML = '';
+            ventaTotal = 0;
+            carrito.forEach((item, idx) => {
+                ventaTotal += item.subtotal;
+                cuerpo.innerHTML += `
+                    <tr>
+                        <td>${item.nombre}</td>
+                        <td>$${item.precio.toFixed(2)}</td>
+                        <td>${item.cantidad}</td>
+                        <td>$${item.subtotal.toFixed(2)}</td>
+                        <td><button class="btn-accion btn-rojo" onclick="quitarDelCarrito(${idx})">❌</button></td>
+                    </tr>`;
+            });
+            document.getElementById('totalVenta').textContent = ventaTotal.toFixed(2);
+        }
 
-// ===== PRODUCTOS =====
-async function cargarProductos() {
-    const snap = await db.collection('productos').get();
-    productos = [];
-    snap.forEach(doc => {
-        productos.push({ id: doc.id, ...doc.data() });
-    });
-    const grid = document.getElementById('grid-productos');
-    grid.innerHTML = '';
-    productos.forEach(p => {
-        grid.innerHTML += `
-            <div class="producto-tarjeta" onclick="agregarAlCarrito('${p.id}','${p.nombre}',${p.precio})">
-                <div class="nombre">${p.nombre}</div>
-                <div class="precio">$${p.precio.toFixed(2)}</div>
-            </div>
-        `;
-    });
-}
+        function quitarDelCarrito(idx) {
+            carrito.splice(idx, 1);
+            actualizarTablaVenta();
+        }
 
-async function cargarProductosTabla() {
-    const snap = await db.collection('productos').get();
-    const tbody = document.querySelector('#tabla-productos tbody');
-    tbody.innerHTML = '';
-    snap.forEach(doc => {
-        const p = doc.data();
-        tbody.innerHTML += `
-            <tr>
-                <td>${p.nombre}</td>
-                <td>$${p.precio.toFixed(2)}</td>
-                <td>${p.stock}</td>
-                <td>${p.categoria || 'Sin categoría'}</td>
-                <td><button class="btn-eliminar" onclick="eliminarProducto('${doc.id}')">Eliminar</button></td>
-            </tr>
-        `;
-    });
-}
+        function limpiarVenta() {
+            carrito = [];
+            ventaTotal = 0;
+            actualizarTablaVenta();
+        }
 
-async function agregarProducto() {
-    const nombre = document.getElementById('prod-nombre').value.trim();
-    const precio = parseFloat(document.getElementById('prod-precio').value);
-    const stock = parseInt(document.getElementById('prod-stock').value);
-    const cat = document.getElementById('prod-cat').value;
-    if (!nombre || isNaN(precio) || isNaN(stock)) {
-        alert('⚠️ Llena todos los campos'); return;
-    }
-    await db.collection('productos').add({ nombre, precio, stock, categoria: cat, fecha: new Date() });
-    alert('✅ Producto agregado');
-    document.getElementById('prod-nombre').value = '';
-    document.getElementById('prod-precio').value = '';
-    document.getElementById('prod-stock').value = '';
-    cargarProductos();
-    cargarProductosTabla();
-}
+        // === COBRAR + TICKET + ABRIR CAJA ===
+        async function cobrarVenta() {
+            if (carrito.length === 0) return alert('⚠️ Agrega productos primero');
+            
+            const fecha = new Date();
+            const datosVenta = {
+                fecha: fecha.toLocaleDateString(),
+                hora: fecha.toLocaleTimeString(),
+                cajero: usuarioActual,
+                productos: carrito,
+                total: ventaTotal
+            };
 
-async function eliminarProducto(id) {
-    if (!confirm('¿Eliminar producto?')) return;
-    await db.collection('productos').doc(id).delete();
-    cargarProductos();
-    cargarProductosTabla();
-}
+            // Guardar venta en Firebase
+            await db.collection('ventas').add(datosVenta);
 
-// ===== CARRITO =====
-function agregarAlCarrito(id, nombre, precio) {
-    const existe = carrito.find(i => i.id === id);
-    if (existe) existe.cantidad++;
-    else carrito.push({ id, nombre, precio, cantidad: 1 });
-    actualizarCarrito();
-}
-function quitarDelCarrito(id) {
-    carrito = carrito.filter(i => i.id !== id);
-    actualizarCarrito();
-}
-function cambiarCantidad(id, delta) {
-    const item = carrito.find(i => i.id === id);
-    if (item) {
-        item.cantidad += delta;
-        if (item.cantidad <= 0) quitarDelCarrito(id);
-        else actualizarCarrito();
-    }
-}
-function actualizarCarrito() {
-    const lista = document.getElementById('lista-carrito');
-    if (carrito.length === 0) {
-        lista.innerHTML = '<p style="color: var(--gris); text-align: center; padding: 20px;">Agrega productos...</p>';
-        document.querySelector('.total-final').textContent = '$0.00';
-        return;
-    }
-    lista.innerHTML = '';
-    let total = 0;
-    carrito.forEach(item => {
-        const subtotal = item.precio * item.cantidad;
-        total += subtotal;
-        lista.innerHTML += `
-            <div class="item-carrito">
-                <div><strong>${item.nombre}</strong><br><small>$${item.precio.toFixed(2)} c/u</small></div>
-                <div class="cantidad">
-                    <button onclick="cambiarCantidad('${item.id}', -1)">-</button>
-                    <span>${item.cantidad}</span>
-                    <button onclick="cambiarCantidad('${item.id}', 1)">+</button>
-                    <button class="btn-quitar" onclick="quitarDelCarrito('${item.id}')">×</button>
-                </div>
-                <div style="font-weight:600;">$${subtotal.toFixed(2)}</div>
-            </div>
-        `;
-    });
-    document.querySelector('.total-final').textContent = `$${total.toFixed(2)}`;
-}
-function limpiarCarrito() {
-    if (carrito.length > 0 && !confirm('¿Cancelar venta?')) return;
-    carrito = [];
-    actualizarCarrito();
-}
+            // Descontar stock
+            for (const item of carrito) {
+                const snap = await db.collection('productos').doc(item.id).get();
+                const stockActual = snap.data().stock;
+                await db.collection('productos').doc(item.id).update({ stock: stockActual - item.cantidad });
+            }
 
-// ===== ABRIR CAJA =====
-function abrirCaja() {
-    alert('💵 ¡CAJA ABIERTA!\n\nComando enviado a impresora para abrir caja.');
-    const comandoCaja = '\x1B\x70\x00\x19\xFA';
-    console.log('Comando de apertura de caja:', comandoCaja);
-}
+            // Abrir caja registradora (comando para impresora/caja USB)
+            abrirCaja();
 
-// ===== COBRAR VENTA =====
-async function cobrarVenta() {
-    if (carrito.length === 0) { alert('⚠️ El carrito está vacío'); return; }
-    const total = carrito.reduce((sum, i) => sum + (i.precio * i.cantidad), 0);
-    const fecha = new Date();
+            // Imprimir ticket
+            imprimirTicket(datosVenta);
 
-    const venta = {
-        fecha: fecha, total: total, cajero: usuarioActivo.nombre,
-        items: carrito.map(i => ({
-            nombre: i.nombre, precio: i.precio, cantidad: i.cantidad, subtotal: i.precio * i.cantidad
-        }))
-    };
-    await db.collection('ventas').add(venta);
+            alert('✅ Venta realizada con éxito!');
+            limpiarVenta();
+            cargarCatalogo();
+            cargarReportes();
+        }
 
-    for (const item of carrito) {
-        const producto = productos.find(p => p.id === item.id);
-        if (producto) {
-            await db.collection('productos').doc(item.id).update({
-                stock: producto.stock - item.cantidad
+        // === ABRIR CAJA REGISTRADORA ===
+        function abrirCaja() {
+            // Comando estándar para caja registradora conectada a impresora térmica
+            const comandoAbrirCaja = '\x1B\x70\x00\x19\xFA';
+            console.log('🔓 Comando abrir caja enviado:', comandoAbrirCaja);
+            alert('🔓 Caja registradora abierta');
+        }
+
+        // === IMPRIMIR TICKET ===
+        function imprimirTicket(venta) {
+            let ticket = `
+====================================
+        TIENDITA - PUNTO DE VENTA
+====================================
+Fecha: ${venta.fecha}   Hora: ${venta.hora}
+Cajero: ${venta.cajero}
+------------------------------------
+PRODUCTO            CANT  PRECIO  SUBT
+`;
+            venta.productos.forEach(p => {
+                ticket += `${p.nombre.padEnd(16)} ${String(p.cantidad).padStart(3)} $${String(p.precio.toFixed(2)).padStart(6)} $${String(p.subtotal.toFixed(2)).padStart(6)}\n`;
+            });
+            ticket += `
+------------------------------------
+TOTAL: $${venta.total.toFixed(2)}
+====================================
+      ¡GRACIAS POR SU COMPRA!
+====================================
+`;
+            console.log('🧾 TICKET:\n', ticket);
+            window.print();
+        }
+
+        // === CATÁLOGO: CARGAR ===
+        async function cargarCatalogo() {
+            const snap = await db.collection('productos').get();
+            const cuerpo = document.getElementById('cuerpoCatalogo');
+            cuerpo.innerHTML = '';
+            snap.forEach(doc => {
+                const p = doc.data();
+                cuerpo.innerHTML += `
+                    <tr>
+                        <td>${p.nombre}</td>
+                        <td>$${p.precio.toFixed(2)}</td>
+                        <td>${p.stock}</td>
+                        <td>
+                            <button class="btn-accion btn-rojo" onclick="eliminarProducto('${doc.id}')">🗑️</button>
+                        </td>
+                    </tr>`;
             });
         }
-    }
 
-    document.getElementById('ticket-fecha').textContent = fecha.toLocaleDateString('es-MX');
-    document.getElementById('ticket-hora').textContent = fecha.toLocaleTimeString('es-MX');
-    document.getElementById('ticket-cajero').textContent = usuarioActivo.nombre;
-    document.getElementById('ticket-total').textContent = `$${total.toFixed(2)}`;
-    const articulos = document.getElementById('ticket-articulos');
-    articulos.innerHTML = '';
-    carrito.forEach(i => {
-        articulos.innerHTML += `
-            <div class="fila-doble">
-                <span>${i.cantidad}x ${i.nombre}</span>
-                <span>$${(i.precio * i.cantidad).toFixed(2)}</span>
-            </div>
-        `;
-    });
-
-    abrirCaja();
-    document.getElementById('ticket-impresion').classList.add('visible');
-    setTimeout(() => {
-        window.print();
-        document.getElementById('ticket-impresion').classList.remove('visible');
-    }, 300);
-
-    carrito = [];
-    actualizarCarrito();
-    await cargarProductos();
-    await cargarProductosTabla();
-    await cargarVentas();
-    alert(`✅ ¡Venta registrada!\nTotal: $${total.toFixed(2)}\nTicket enviado a impresora\nCaja abierta`);
-}
-
-// ===== COMPRAS =====
-function cargarProductosEnCompra() {
-    const select = document.getElementById('compra-producto');
-    select.innerHTML = '';
-    productos.forEach(p => {
-        let opt = document.createElement('option');
-        opt.value = p.id;
-        opt.textContent = p.nombre;
-        select.appendChild(opt);
-    });
-}
-
-function agregarLineaCompra() {
-    const prodId = document.getElementById('compra-producto').value;
-    const cant = parseFloat(document.getElementById('compra-cantidad').value);
-    const costo = parseFloat(document.getElementById('compra-costo').value);
-    if (!prodId || !cant || cant <= 0 || !costo || costo <= 0) {
-        alert('⚠️ Completa todos los datos correctamente'); return;
-    }
-    const prod = productos.find(p => p.id === prodId);
-    lineasCompra.push({
-        idProd: prodId, nombre: prod.nombre, cantidad: cant,
-        costoUnitario: costo, subtotal: cant * costo
-    });
-    actualizarTablaCompra();
-    document.getElementById('compra-cantidad').value = '';
-    document.getElementById('compra-costo').value = '';
-}
-
-function actualizarTablaCompra() {
-    const tbody = document.getElementById('tabla-compra-body');
-    tbody.innerHTML = '';
-    let total = 0;
-    lineasCompra.forEach((l, i) => {
-        total += l.subtotal;
-        tbody.innerHTML += `
-            <tr>
-                <td>${l.nombre}</td>
-                <td>${l.cantidad}</td>
-                <td>$${l.costoUnitario.toFixed(2)}</td>
-                <td>$${l.subtotal.toFixed(2)}</td>
-                <td><button class="btn-eliminar" onclick="quitarLineaCompra(${i})">X</button></td>
-            </tr>`;
-    });
-    document.getElementById('compra-total').textContent = total.toFixed(2);
-}
-
-function quitarLineaCompra(indice) {
-    lineasCompra.splice(indice, 1);
-    actualizarTablaCompra();
-}
-
-async function guardarCompra() {
-    if (lineasCompra.length === 0) { alert('⚠️ Agrega productos a la compra'); return; }
-    const fecha = document.getElementById('compra-fecha').value || new Date().toISOString().slice(0,10);
-    const proveedor = document.getElementById('compra-proveedor').value.trim() || 'Sin proveedor';
-    const total = lineasCompra.reduce((s,l)=>s+l.subtotal,0);
-
-    for (let linea of lineasCompra) {
-        const prod = productos.find(p => p.id === linea.idProd);
-        if (prod) {
-            const nuevoStock = (prod.stock || 0) + linea.cantidad;
-            await db.collection('productos').doc(linea.idProd).update({ stock: nuevoStock });
+        // === GUARDAR PRODUCTO ===
+        async function guardarProducto() {
+            const nombre = document.getElementById('prodNombre').value.trim();
+            const precio = parseFloat(document.getElementById('prodPrecio').value);
+            const stock = parseInt(document.getElementById('prodStock').value);
+            
+            if (!nombre || !precio) return alert('⚠️ Completa nombre y precio');
+            
+            await db.collection('productos').add({ nombre, precio, stock: stock || 0 });
+            alert('✅ Producto guardado');
+            document.getElementById('prodNombre').value = '';
+            document.getElementById('prodPrecio').value = '';
+            document.getElementById('prodStock').value = '';
+            cargarCatalogo();
         }
-    }
 
-    await db.collection('compras').add({
-        fecha, proveedor, lineas: lineasCompra, total, fechaRegistro: new Date()
-    });
-
-    alert('✅ Compra guardada y stock actualizado');
-    limpiarCompra();
-    await cargarProductos();
-}
-
-function limpiarCompra() {
-    lineasCompra = [];
-    actualizarTablaCompra();
-    document.getElementById('compra-proveedor').value = '';
-    document.getElementById('compra-fecha').value = new Date().toISOString().slice(0,10);
-}
-
-// ===== REPORTES =====
-async function cargarVentas() {
-    const snap = await db.collection('ventas').orderBy('fecha', 'desc').limit(50).get();
-    const tbody = document.querySelector('#tabla-ventas tbody');
-    tbody.innerHTML = '';
-    let totalDia = 0;
-    const hoy = new Date().toDateString();
-    snap.forEach(doc => {
-        const v = doc.data();
-        const fechaV = v.fecha.toDate();
-        const fechaStr = fechaV.toLocaleDateString('es-MX');
-        const horaStr = fechaV.toLocaleTimeString('es-MX');
-        if (fechaV.toDateString() === hoy) totalDia += v.total;
-        tbody.innerHTML += `
-            <tr>
-                <td>${fechaStr} ${horaStr}</td>
-                <td style="font-weight:bold; color:var(--exito);">$${v.total.toFixed(2)}</td>
-                <td>${v.cajero}</td>
-                <td><button class="btn-eliminar" onclick="alert('Reimpresión en desarrollo')">Ticket</button></td>
-            </tr>
-        `;
-    });
-    document.getElementById('ventas-dia').textContent = `$${totalDia.toFixed(2)}`;
-}
-
-// ===== CIERRE DE CAJA — CORREGIDO =====
-async function generarCierre() {
-    const snap = await db.collection('ventas').get();
-    let total = 0;
-    let cantidad = 0;
-    const hoy = new Date().toDateString();
-    snap.forEach(doc => {
-        const v = doc.data();
-        if (v.fecha.toDate().toDateString() === hoy) {
-            total += v.total;
-            cantidad++;
+        // === ELIMINAR PRODUCTO ===
+        async function eliminarProducto(id) {
+            if (!confirm('¿Eliminar este producto?')) return;
+            await db.collection('productos').doc(id).delete();
+            cargarCatalogo();
         }
-    });
-    
-    // Mostrar totales
-    document.getElementById('cierre-total').textContent = `$${total.toFixed(2)}`;
-    document.getElementById('cierre-cantidad').textContent = cantidad;
-    
-    // Mostrar mensaje
-    alert(`🧾 CIERRE DE CAJA\n\nFecha: ${new Date().toLocaleDateString('es-MX')}\nCajero: ${usuarioActivo.nombre}\nTotal Ventas: $${total.toFixed(2)}\nCantidad de Ventas: ${cantidad}\n\n✅ ¡Cierre generado!`);
-    
-    // ✅ REINICIAR A CERO DESPUÉS DEL CIERRE
-    document.getElementById('cierre-total').textContent = '$0.00';
-    document.getElementById('cierre-cantidad').textContent = '0';
-}
 
-// ===== USUARIOS =====
-async function cargarUsuarios() {
-    const snap = await db.collection('usuarios').get();
-    const tbody = document.querySelector('#tabla-usuarios tbody');
-    tbody.innerHTML = '';
-    snap.forEach(doc => {
-        const u = doc.data();
-        const fecha = u.fechaRegistro ? u.fechaRegistro.toDate().toLocaleDateString('es-MX') : 'Sin fecha';
-        tbody.innerHTML += `
-            <tr>
-                <td>${u.nombre}</td>
-                <td>${u.usuario}</td>
-                <td>${u.rol}</td>
-                <td>${fecha}</td>
-                <td><button class="btn-eliminar" onclick="eliminarUsuario('${doc.id}')">Eliminar</button></td>
-            </tr>
-        `;
-    });
-}
-async function eliminarUsuario(id) {
-    if (!confirm('¿Eliminar este usuario?')) return;
-    await db.collection('usuarios').doc(id).delete();
-    carg
+        // === BUSCAR EN CATÁLOGO ===
+        function buscarEnCatalogo() {
+            // Se puede mejorar con filtro en tiempo real
+        }
+
+        // === COMPRAS: REGISTRAR ===
+        async function registrarCompra() {
+            const nombre = document.getElementById('compraNombre').value.trim();
+            const cantidad = parseInt(document.getElementById('compraCantidad').value);
+            const precio = parseFloat(document.getElementById('compraPrecio').value);
+            
+            if (!nombre || !cantidad || !precio) return alert('⚠️ Completa todos los campos');
+            
+            const fecha = new Date();
+            const total = cantidad * precio;
+            
+            await db.collection('compras').add({
+                fecha: fecha.toLocaleDateString(),
+                hora: fecha.toLocaleTimeString(),
+                nombre, cantidad, precioUnitario: precio, total
+            });
+
+            // Actualizar stock del producto
+            const snap = await db.collection('productos').where('nombre', '==', nombre).get();
+            if (!snap.empty) {
+                const doc = snap.docs[0];
+                const stockActual = doc.data().stock || 0;
+                await db.collection('productos').doc(doc.id).update({ stock: stockActual + cantidad });
+            } else {
+                await db.collection('productos').add({ nombre, precio: precio * 1.2, stock: cantidad });
+            }
+
+            alert('✅ Compra registrada y stock actualizado');
+            document.getElementById('compraNombre').value = '';
+            document.getElementById('compraCantidad').value = '';
+            document.getElementById('compraPrecio').value = '';
+            cargarCompras();
+            cargarCatalogo();
+        }
+
+        // === CARGAR COMPRAS ===
+        async function cargarCompras() {
+            const snap = await db.collection('compras').orderBy('fecha', 'desc').limit(20).get();
+            const cuerpo = document.getElementById('cuerpoCompras');
+            cuerpo.innerHTML = '';
+            snap.forEach(doc => {
+                const c = doc.data();
+                cuerpo.innerHTML += `
+                    <tr>
+                        <td>${c.fecha} ${c.hora}</td>
+                        <td>${c.nombre}</td>
+                        <td>${c.cantidad}</td>
+                        <td>$${c.precioUnitario.toFixed(2)}</td>
+                        <td>$${c.total.toFixed(2)}</td>
+                    </tr>`;
+            });
+        }
+
+        // === REPORTES ===
+        async function cargarReportes() {
+            const snap = await db.collection('ventas').get();
+            const cuerpo = document.getElementById('cuerpoReportes');
+            cuerpo.innerHTML = '';
+            let totalSemanal = 0;
+            snap.forEach(doc => {
+                const v = doc.data();
+                totalSemanal += v.total;
+                cuerpo.innerHTML += `
+                    <tr>
+                        <td>${v.fecha}</td>
+                        <td>${v.hora}</td>
+                        <td>${v.productos.length} productos</td>
+                        <td>$${v.total.toFixed(2)}</td>
+                        <td>${v.cajero}</td>
+                    </tr>`;
+            });
+            document.getElementById('totalSemanal').textContent = totalSemanal.toFixed(2);
+            document.getElementById('cantidadVentas').textContent = snap.size;
+        }
+
+        // === CIERRE DE CAJA ===
+        function actualizarFechaCierre() {
+            const hoy = new Date();
+            document.getElementById('cierre-fecha').textContent = hoy.toLocaleDateString();
+            document.getElementById('cierre-cajero').textContent = usuarioActual;
+        }
+
+        async function hacerCierre() {
+            const snap = await db.collection('ventas').get();
+            let total = 0;
+            snap.forEach(d => total += d.data().total);
+            
+            document.getElementById('cierre-total').textContent = '$' + total.toFixed(2);
+            document.getElementById('cierre-cantidad').textContent = snap.size;
+
+            // Guardar cierre en historial
+            await db.collection('cierres').add({
+                fecha: new Date().toLocaleDateString(),
+                cajero: usuarioActual,
+                total,
+                cantidadVentas: snap.size,
+                fechaHora: new Date()
+            });
+
+            alert('✅ Cierre de caja realizado y guardado');
+            cargarHistorialCierres();
+        }
+
+        async function reiniciarCierre() {
+            if (!confirm('¿Seguro de reiniciar? Se borrarán las ventas del día.')) return;
+            const snap = await db.collection('ventas').get();
+            const batch = db.batch();
+            snap.forEach(doc => batch.delete(doc.ref));
+            await batch.commit();
+            alert('✅ Conteo reiniciado');
+            document.getElementById('cierre-total').textContent = '$0.00';
+            document.getElementById('cierre-cantidad').textContent = '0';
+            cargarCatalogo();
+            cargarReportes();
+        }
+
+        async function cargarHistorialCierres() {
+            const snap = await db.collection('cierres').orderBy('fechaHora', 'desc').limit(10).get();
+            const cuerpo = document.getElementById('cuerpoCierres');
+            cuerpo.innerHTML = '';
+            snap.forEach(doc => {
+                const c = doc.data();
+                cuerpo.innerHTML += `
+                    <tr>
+                        <td>${c.fecha}</td>
+                        <td>${c.cajero}</td>
+                        <td>$${c.total.toFixed(2)}</td>
+                        <td>${c.cantidadVentas}</td>
+                    </tr>`;
+            });
+        }
+    </script>
+</body>
+</html>

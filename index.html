@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🏪 Tiendita - Punto de Venta</title>
-
-    <!-- ===== FIREBASE SDK ===== -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
            
@@ -19,55 +17,25 @@
         body { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); min-height: 100vh; padding: 15px; }
         .contenedor { max-width: 1400px; margin: 0 auto; }
         .carrito-item { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    padding: 0.75rem 0; 
-    border-bottom: 1px solid #e2e8f0; 
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    min-height: 60px;
-}
-.carrito-item .cantidad-controles { 
-    display: flex; 
-    align-items: center; 
-    gap: 0.75rem; 
-    min-width: 120px;
-    justify-content: center;
-}
-.carrito-item .cantidad-controles button { 
-    width: 32px; 
-    height: 32px; 
-    border: none; 
-    border-radius: 50%; 
-    cursor: pointer; 
-    font-weight: bold;
-    font-size: 1.1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--primario);
-    color: white;
-}
-.carrito-item .cantidad-controles span {
-    font-size: 1.2rem;
-    font-weight: 700;
-    min-width: 30px;
-    text-align: center;
-    color: var(--texto);
-}
-th, td { 
-    padding: 1rem; 
-    text-align: left; 
-    border-bottom: 1px solid #e2e8f0; 
-}
-td:nth-child(3), th:nth-child(3),
-td:nth-child(4), th:nth-child(4) { 
-    width: 90px; 
-    text-align: center; 
-}
-
-        /* ===== LOGIN ===== */
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 0.75rem 0; border-bottom: 1px solid #e2e8f0; 
+            flex-wrap: wrap; gap: 0.5rem; min-height: 60px;
+        }
+        .carrito-item .cantidad-controles { 
+            display: flex; align-items: center; gap: 0.75rem; min-width: 120px; justify-content: center;
+        }
+        .carrito-item .cantidad-controles button { 
+            width: 32px; height: 32px; border: none; border-radius: 50%; cursor: pointer; 
+            font-weight: bold; font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
+            background: var(--primario); color: white;
+        }
+        .carrito-item .cantidad-controles span {
+            font-size: 1.2rem; font-weight: 700; min-width: 30px; text-align: center; color: var(--texto);
+        }
+        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        td:nth-child(3), th:nth-child(3),
+        td:nth-child(4), th:nth-child(4) { width: 90px; text-align: center; }
+        
         .login-card {
             max-width: 420px; margin: 60px auto; background: var(--blanco);
             padding: 35px; border-radius: 16px; box-shadow: 0 10px 40px rgba(37, 99, 235, 0.15);
@@ -89,12 +57,13 @@ td:nth-child(4), th:nth-child(4) {
         }
         .btn:active { transform: scale(0.98); }
         .btn-primario { background: linear-gradient(135deg, var(--primario), var(--secundario)); color: white; }
+        .btn-exito { background: var(--exito); color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        .btn-peligro { background: var(--peligro); color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; }
         .mensaje { margin-top: 12px; padding: 10px; border-radius: 6px; text-align: center; font-weight: 500; display: none; font-size: 14px; }
         .mensaje.exito { background: #dcfce7; color: #166534; display: block; }
         .mensaje.error { background: #fee2e2; color: #991b1b; display: block; }
         .oculto { display: none !important; }
-
-        /* ===== PANEL PRINCIPAL ===== */
+        
         .barra-superior {
             background: var(--blanco); padding: 15px 20px; border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 15px;
@@ -111,8 +80,7 @@ td:nth-child(4), th:nth-child(4) {
         .btn-nav.activo, .btn-nav:hover { background: var(--primario); color: white; }
         .seccion { display: none; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .seccion.activa { display: block; }
-
-        /* ===== VENTAS ===== */
+        
         .ventas-layout { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; }
         @media (max-width: 900px) { .ventas-layout { grid-template-columns: 1fr; } }
         
@@ -124,7 +92,6 @@ td:nth-child(4), th:nth-child(4) {
         .producto-tarjeta:hover { border-color: var(--primario); transform: translateY(-2px); background: #eff6ff; }
         .producto-tarjeta .nombre { font-weight: 600; font-size: 14px; margin-bottom: 6px; color: var(--texto); }
         .producto-tarjeta .precio { font-size: 18px; font-weight: 700; color: var(--exito); }
-
         .carrito { background: var(--fondo); border-radius: 10px; padding: 15px; }
         .carrito h3 { font-size: 18px; color: var(--primario); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--borde); }
         .item-carrito { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--borde); }
@@ -137,11 +104,9 @@ td:nth-child(4), th:nth-child(4) {
         .btn-cobrar { background: var(--exito); color: white; border: none; padding: 14px 25px; border-radius: 8px; font-size: 18px; font-weight: 700; cursor: pointer; flex: 1; min-width: 200px; }
         .btn-cancelar { background: var(--gris); color: white; border: none; padding: 14px 25px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; }
         .btn-caja { background: var(--naranja); color: white; border: none; padding: 14px 25px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; }
-
-        /* ===== TICKET IMPRESIÓN ===== */
+        
         .ticket {
-            width: 80mm; padding: 3mm; background: white; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.5;
-            display: none;
+            width: 80mm; padding: 3mm; background: white; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.5; display: none;
         }
         .ticket.visible { display: block; }
         .ticket .centro { text-align: center; }
@@ -156,105 +121,44 @@ td:nth-child(4), th:nth-child(4) {
             .ticket { position: absolute; left: 0; top: 0; width: 80mm !important; display: block !important; }
             @page { size: 80mm auto; margin: 0; }
         }
-
-        /* ===== CATÁLOGO ===== */
+        
         .grid-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .btn-agregar { background: var(--exito); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 15px; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px 10px; text-align: left; border-bottom: 1px solid var(--borde); font-size: 14px; }
         th { background: #f8fafc; font-weight: 600; color: var(--primario); }
         .btn-eliminar { background: var(--peligro); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; }
-    /* ====== ESTILOS SECCIÓN COMPRAS — PROVEEDORES Y ACTUALIZACIÓN DE INVENTARIO ====== */
-.formulario-compra {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    margin-bottom: 2rem;
-}
-.fila-form {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-.campo label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: var(--texto);
-}
-.input-campo, .input-select {
-    width: 100%;
-    padding: 0.85rem 1rem;
-    border: 2px solid var(--borde);
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: border-color 0.2s;
-}
-.input-campo:focus, .input-select:focus {
-    outline: none;
-    border-color: var(--primario);
-}
-.carrito-compra {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-.carrito-compra h3 {
-    margin-bottom: 1.5rem;
-    color: var(--primario);
-    border-bottom: 2px solid var(--borde);
-    padding-bottom: 0.75rem;
-}
-.compra-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 0;
-    border-bottom: 1px solid var(--borde);
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-.compra-item .info {
-    flex: 1;
-    min-width: 200px;
-}
-.compra-item .subtotal {
-    font-weight: 700;
-    color: var(--exito);
-    font-size: 1.1rem;
-}
-.compra-item button {
-    background: var(--peligro);
-    color: white;
-    border: none;
-    padding: 0.5rem 0.75rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.9rem;
-}
-.total-compra {
-    margin-top: 1.5rem;
-    padding: 1.25rem;
-    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-    border-radius: 8px;
-    text-align: right;
-    font-size: 1.4rem;
-    color: var(--exito);
-}
-.sin-datos {
-    text-align: center;
-    color: var(--gris);
-    padding: 2rem;
-}
+        
+        .formulario-compra, .carrito-compra {
+            background: white; padding: 2rem; border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 2rem;
+        }
+        .fila-form {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;
+        }
+        .campo label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--texto); }
+        .input-campo, .input-select {
+            width: 100%; padding: 0.85rem 1rem; border: 2px solid var(--borde);
+            border-radius: 8px; font-size: 1rem; transition: border-color 0.2s;
+        }
+        .input-campo:focus, .input-select:focus { outline: none; border-color: var(--primario); }
+        .compra-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 0; border-bottom: 1px solid var(--borde); flex-wrap: wrap; gap: 0.5rem;
+        }
+        .compra-item .info { flex: 1; min-width: 200px; }
+        .compra-item .subtotal { font-weight: 700; color: var(--exito); font-size: 1.1rem; }
+        .total-compra {
+            margin-top: 1.5rem; padding: 1.25rem;
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border-radius: 8px; text-align: right; font-size: 1.4rem; color: var(--exito);
+        }
+        .sin-datos { text-align: center; color: var(--gris); padding: 2rem; }
     </style>
 </head>
 <body>
 <div class="contenedor">
 
-<!-- ====================================== LOGIN ====================================== -->
+<!-- ====================== LOGIN ====================== -->
 <div id="pantalla-login">
     <div class="login-card">
         <h1>🏪 TIENDITA - PUNTO DE VENTA</h1>
@@ -262,7 +166,6 @@ td:nth-child(4), th:nth-child(4) {
             <div class="tab activa" onclick="cambiarTab('login')">Iniciar Sesión</div>
             <div class="tab" onclick="cambiarTab('registro')">Registrar Usuario</div>
         </div>
-
         <div id="form-login">
             <div class="form-group">
                 <label>Usuario</label>
@@ -275,7 +178,6 @@ td:nth-child(4), th:nth-child(4) {
             <button class="btn btn-primario" onclick="iniciarSesion()">🔑 INGRESAR AL SISTEMA</button>
             <div id="mensaje-login" class="mensaje"></div>
         </div>
-
         <div id="form-registro" class="oculto">
             <div class="form-group">
                 <label>Nombre Completo</label>
@@ -306,7 +208,7 @@ td:nth-child(4), th:nth-child(4) {
     </div>
 </div>
 
-<!-- ====================================== PANEL PRINCIPAL ====================================== -->
+<!-- ====================== PANEL PRINCIPAL ====================== -->
 <div id="panel-principal" class="oculto">
     <div class="barra-superior">
         <h2>🏪 TIENDITA - PUNTO DE VENTA</h2>
@@ -315,30 +217,23 @@ td:nth-child(4), th:nth-child(4) {
             <button class="btn-salir" onclick="cerrarSesion()">🚪 Cerrar Sesión</button>
         </div>
     </div>
-
     <div class="navegacion">
         <button class="btn-nav activo" onclick="cambiarSeccion('ventas')">💰 Ventas</button>
+        <button class="btn-nav" onclick="cambiarSeccion('compras')">📥 Compras</button>
         <button class="btn-nav" onclick="cambiarSeccion('catalogo')">📦 Catálogo</button>
         <button class="btn-nav" onclick="cambiarSeccion('reportes')">📊 Reportes</button>
         <button class="btn-nav" onclick="cambiarSeccion('cierre')">🧾 Cierre de Caja</button>
         <button class="btn-nav" onclick="cambiarSeccion('usuarios')">👤 Usuarios</button>
     </div>
 
-    <!-- ====================================== VENTAS ====================================== -->
+    <!-- ========== VENTAS ========== -->
     <div id="seccion-ventas" class="seccion activa">
-        <h2>💰 PUNTO DE VENTA</h2>
-        <br>
+        <h2>💰 PUNTO DE VENTA</h2><br>
         <div class="ventas-layout">
-            <!-- PRODUCTOS A LA VENTA -->
             <div>
-                <h3>📋 Productos Disponibles</h3>
-                <br>
-                <div class="productos-grid" id="grid-productos">
-                    <!-- Se cargan desde Firebase -->
-                </div>
+                <h3>📋 Productos Disponibles</h3><br>
+                <div class="productos-grid" id="grid-productos"></div>
             </div>
-
-            <!-- CARRITO DE COMPRA -->
             <div class="carrito">
                 <h3>🛒 CARRITO</h3>
                 <div id="lista-carrito">
@@ -354,10 +249,63 @@ td:nth-child(4), th:nth-child(4) {
         </div>
     </div>
 
-    <!-- ====================================== CATÁLOGO ====================================== -->
-    <div id="seccion-catalogo" class="seccion">
-        <h2>📦 CATÁLOGO DE PRODUCTOS</h2>
+    <!-- ========== COMPRAS ========== -->
+    <div id="seccion-compras" class="seccion">
+        <h2>📥 REGISTRO DE COMPRAS</h2><br>
+        <div class="formulario-compra">
+            <div class="fila-form">
+                <div class="campo">
+                    <label>Proveedor</label>
+                    <input type="text" id="compra-proveedor" class="input-campo" placeholder="Nombre del proveedor">
+                </div>
+                <div class="campo">
+                    <label>Fecha</label>
+                    <input type="date" id="compra-fecha" class="input-campo">
+                </div>
+            </div>
+            <div class="fila-form">
+                <div class="campo">
+                    <label>Producto</label>
+                    <select id="compra-producto" class="input-select"></select>
+                </div>
+                <div class="campo">
+                    <label>Cantidad</label>
+                    <input type="number" id="compra-cantidad" min="1" class="input-campo" placeholder="Cantidad">
+                </div>
+                <div class="campo">
+                    <label>Costo Unitario ($)</label>
+                    <input type="number" id="compra-costo" step="0.01" min="0.01" class="input-campo" placeholder="Costo">
+                </div>
+                <div style="display:flex;align-items:flex-end;">
+                    <button class="btn-exito" onclick="agregarLineaCompra()">➕ Agregar</button>
+                </div>
+            </div>
+        </div>
+
+        <h3>Detalle de Compra</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Costo Unitario</th>
+                    <th>Subtotal</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-compra-body"></tbody>
+        </table>
+        <div class="total-compra">Total: $<span id="compra-total">0.00</span></div>
         <br>
+        <div style="display:flex; gap:10px;">
+            <button class="btn-agregar" onclick="guardarCompra()">💾 GUARDAR COMPRA</button>
+            <button class="btn-cancelar" onclick="limpiarCompra()">🗑️ LIMPIAR</button>
+        </div>
+    </div>
+
+    <!-- ========== CATÁLOGO ========== -->
+    <div id="seccion-catalogo" class="seccion">
+        <h2>📦 CATÁLOGO DE PRODUCTOS</h2><br>
         <div class="grid-form">
             <div class="form-group">
                 <label>Nombre del Producto</label>
@@ -391,13 +339,10 @@ td:nth-child(4), th:nth-child(4) {
         </table>
     </div>
 
-    <!-- ====================================== REPORTES ====================================== -->
+    <!-- ========== REPORTES ========== -->
     <div id="seccion-reportes" class="seccion">
-        <h2>📊 REPORTES DE VENTAS</h2>
-        <br>
-        <p>Ventas del día: <strong id="ventas-dia">$0.00</strong></p>
-        <p>Ventas de la semana: <strong id="ventas-semana">$0.00</strong></p>
-        <br>
+        <h2>📊 REPORTES DE VENTAS</h2><br>
+        <p>Ventas del día: <strong id="ventas-dia">$0.00</strong></p><br>
         <h3>Últimas Ventas</h3>
         <table id="tabla-ventas">
             <thead>
@@ -407,24 +352,21 @@ td:nth-child(4), th:nth-child(4) {
         </table>
     </div>
 
-    <!-- ====================================== CIERRE DE CAJA ====================================== -->
+    <!-- ========== CIERRE DE CAJA ========== -->
     <div id="seccion-cierre" class="seccion">
-        <h2>🧾 CIERRE DE CAJA</h2>
-        <br>
+        <h2>🧾 CIERRE DE CAJA</h2><br>
         <div style="font-size: 18px; line-height: 2;">
             <p><strong>Fecha:</strong> <span id="cierre-fecha"></span></p>
             <p><strong>Cajero:</strong> <span id="cierre-cajero"></span></p>
             <p><strong>Total Ventas del Día:</strong> <span id="cierre-total" style="color: var(--exito); font-weight: bold;">$0.00</span></p>
             <p><strong>Ventas Realizadas:</strong> <span id="cierre-cantidad">0</span></p>
-        </div>
-        <br>
+        </div><br>
         <button class="btn-agregar" onclick="generarCierre()" style="font-size: 18px; padding: 15px 40px;">✅ GENERAR CIERRE DE CAJA</button>
     </div>
 
-    <!-- ====================================== USUARIOS ====================================== -->
+    <!-- ========== USUARIOS ========== -->
     <div id="seccion-usuarios" class="seccion">
-        <h2>👤 GESTIÓN DE USUARIOS</h2>
-        <br>
+        <h2>👤 GESTIÓN DE USUARIOS</h2><br>
         <table id="tabla-usuarios">
             <thead>
                 <tr><th>Nombre</th><th>Usuario</th><th>Rol</th><th>Fecha de Registro</th><th>Acciones</th></tr>
@@ -434,31 +376,19 @@ td:nth-child(4), th:nth-child(4) {
     </div>
 </div>
 
-<!-- ====================================== TICKET DE IMPRESIÓN ====================================== -->
+<!-- ========== TICKET DE IMPRESIÓN ========== -->
 <div class="ticket" id="ticket-impresion">
     <div class="centro grande negrita">TIENDITA</div>
     <div class="centro">RFC: XAXX010101000</div>
     <div class="centro">Tel: 55-1234-5678</div>
     <div class="linea"></div>
-    <div class="fila-doble">
-        <span>Fecha:</span>
-        <span id="ticket-fecha"></span>
-    </div>
-    <div class="fila-doble">
-        <span>Hora:</span>
-        <span id="ticket-hora"></span>
-    </div>
-    <div class="fila-doble">
-        <span>Cajero:</span>
-        <span id="ticket-cajero"></span>
-    </div>
+    <div class="fila-doble"><span>Fecha:</span><span id="ticket-fecha"></span></div>
+    <div class="fila-doble"><span>Hora:</span><span id="ticket-hora"></span></div>
+    <div class="fila-doble"><span>Cajero:</span><span id="ticket-cajero"></span></div>
     <div class="linea"></div>
     <div id="ticket-articulos"></div>
     <div class="linea"></div>
-    <div class="fila-doble negrita grande">
-        <span>TOTAL</span>
-        <span id="ticket-total"></span>
-    </div>
+    <div class="fila-doble negrita grande"><span>TOTAL</span><span id="ticket-total"></span></div>
     <div class="linea"></div>
     <div class="centro">¡Gracias por su compra!</div>
     <div class="centro">--- Vuelva pronto ---</div>
@@ -482,6 +412,7 @@ const db = firebase.firestore();
 let usuarioActivo = null;
 let carrito = [];
 let productos = [];
+let lineasCompra = [];
 
 // ===== CAMBIAR PESTAÑA LOGIN =====
 function cambiarTab(tipo) {
@@ -496,7 +427,6 @@ function cambiarTab(tipo) {
     }
     limpiarMensajes();
 }
-
 function mostrarMensaje(id, texto, tipo) {
     const div = document.getElementById(id);
     div.textContent = texto;
@@ -515,7 +445,6 @@ async function registrarUsuario() {
     const rol = document.getElementById('rol-reg').value;
     const pass = document.getElementById('pass-reg').value;
     const passConf = document.getElementById('pass-conf').value;
-
     if (!nombre || !usuario || !pass || !passConf) {
         mostrarMensaje('mensaje-reg', '⚠️ Llena todos los campos', 'error'); return;
     }
@@ -525,7 +454,6 @@ async function registrarUsuario() {
     if (pass !== passConf) {
         mostrarMensaje('mensaje-reg', '⚠️ Las contraseñas no coinciden', 'error'); return;
     }
-
     try {
         const existe = await db.collection('usuarios').where('usuario', '==', usuario).get();
         if (!existe.empty) {
@@ -550,25 +478,20 @@ async function registrarUsuario() {
 async function iniciarSesion() {
     const usuario = document.getElementById('usuario-login').value.trim().toLowerCase();
     const pass = document.getElementById('pass-login').value;
-
     if (!usuario || !pass) {
         mostrarMensaje('mensaje-login', '⚠️ Escribe usuario y contraseña', 'error'); return;
     }
-
     try {
         const snapshot = await db.collection('usuarios')
             .where('usuario', '==', usuario)
             .where('contraseña', '==', pass)
             .get();
-
         if (snapshot.empty) {
             mostrarMensaje('mensaje-login', '❌ Usuario o contraseña incorrectos', 'error'); return;
         }
-
         snapshot.forEach(doc => {
             usuarioActivo = { id: doc.id, ...doc.data() };
         });
-
         localStorage.setItem('usuarioActivo', JSON.stringify(usuarioActivo));
         entrarAlSistema();
     } catch (e) {
@@ -580,11 +503,11 @@ function entrarAlSistema() {
     document.getElementById('pantalla-login').classList.add('oculto');
     document.getElementById('panel-principal').classList.remove('oculto');
     document.getElementById('nombre-usuario').textContent = `${usuarioActivo.nombre} (${usuarioActivo.rol})`;
+    document.getElementById('cierre-fecha').textContent = new Date().toLocaleDateString('es-MX');
+    document.getElementById('cierre-cajero').textContent = usuarioActivo.nombre;
     cargarProductos();
     cargarUsuarios();
     cargarVentas();
-    document.getElementById('cierre-fecha').textContent = new Date().toLocaleDateString('es-MX');
-    document.getElementById('cierre-cajero').textContent = usuarioActivo.nombre;
 }
 
 function cerrarSesion() {
@@ -606,6 +529,7 @@ function cambiarSeccion(nombre) {
     document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
     document.getElementById(`seccion-${nombre}`).classList.add('activa');
     if (nombre === 'ventas') actualizarCarrito();
+    if (nombre === 'compras') { cargarProductosEnCompra(); limpiarCompra(); }
     if (nombre === 'catalogo') cargarProductosTabla();
     if (nombre === 'reportes') cargarVentas();
 }
@@ -652,11 +576,9 @@ async function agregarProducto() {
     const precio = parseFloat(document.getElementById('prod-precio').value);
     const stock = parseInt(document.getElementById('prod-stock').value);
     const cat = document.getElementById('prod-cat').value;
-
     if (!nombre || isNaN(precio) || isNaN(stock)) {
         alert('⚠️ Llena todos los campos'); return;
     }
-
     await db.collection('productos').add({ nombre, precio, stock, categoria: cat, fecha: new Date() });
     alert('✅ Producto agregado');
     document.getElementById('prod-nombre').value = '';
@@ -676,19 +598,14 @@ async function eliminarProducto(id) {
 // ===== CARRITO =====
 function agregarAlCarrito(id, nombre, precio) {
     const existe = carrito.find(i => i.id === id);
-    if (existe) {
-        existe.cantidad++;
-    } else {
-        carrito.push({ id, nombre, precio, cantidad: 1 });
-    }
+    if (existe) existe.cantidad++;
+    else carrito.push({ id, nombre, precio, cantidad: 1 });
     actualizarCarrito();
 }
-
 function quitarDelCarrito(id) {
     carrito = carrito.filter(i => i.id !== id);
     actualizarCarrito();
 }
-
 function cambiarCantidad(id, delta) {
     const item = carrito.find(i => i.id === id);
     if (item) {
@@ -697,7 +614,6 @@ function cambiarCantidad(id, delta) {
         else actualizarCarrito();
     }
 }
-
 function actualizarCarrito() {
     const lista = document.getElementById('lista-carrito');
     if (carrito.length === 0) {
@@ -705,7 +621,6 @@ function actualizarCarrito() {
         document.querySelector('.total-final').textContent = '$0.00';
         return;
     }
-
     lista.innerHTML = '';
     let total = 0;
     carrito.forEach(item => {
@@ -713,65 +628,46 @@ function actualizarCarrito() {
         total += subtotal;
         lista.innerHTML += `
             <div class="item-carrito">
-                <div>
-                    <div><strong>${item.nombre}</strong></div>
-                    <div style="color: var(--gris); font-size: 13px;">$${item.precio.toFixed(2)} c/u</div>
-                </div>
+                <div><strong>${item.nombre}</strong><br><small>$${item.precio.toFixed(2)} c/u</small></div>
                 <div class="cantidad">
                     <button onclick="cambiarCantidad('${item.id}', -1)">-</button>
                     <span>${item.cantidad}</span>
                     <button onclick="cambiarCantidad('${item.id}', 1)">+</button>
                     <button class="btn-quitar" onclick="quitarDelCarrito('${item.id}')">×</button>
                 </div>
-                <div style="font-weight: 600;">$${subtotal.toFixed(2)}</div>
+                <div style="font-weight:600;">$${subtotal.toFixed(2)}</div>
             </div>
         `;
     });
     document.querySelector('.total-final').textContent = `$${total.toFixed(2)}`;
 }
-
 function limpiarCarrito() {
     if (carrito.length > 0 && !confirm('¿Cancelar venta?')) return;
     carrito = [];
     actualizarCarrito();
 }
 
-// ===== ABRIR CAJA REGISTRADORA =====
+// ===== ABRIR CAJA =====
 function abrirCaja() {
-    // Simula apertura de caja registradora
-    // ⚠️ Para caja real: necesitas configurar puerto serial o impresora con comando de apertura
     alert('💵 ¡CAJA ABIERTA!\n\nComando enviado a impresora para abrir caja.');
-    
-    // Comando para impresora térmica (apertura de caja)
     const comandoCaja = '\x1B\x70\x00\x19\xFA';
-    console.log('Comando de apertura de caja enviado:', comandoCaja);
+    console.log('Comando de apertura de caja:', comandoCaja);
 }
 
-// ===== COBRAR E IMPRIMIR TICKET =====
+// ===== COBRAR VENTA =====
 async function cobrarVenta() {
-    if (carrito.length === 0) {
-        alert('⚠️ El carrito está vacío'); return;
-    }
-
+    if (carrito.length === 0) { alert('⚠️ El carrito está vacío'); return; }
     const total = carrito.reduce((sum, i) => sum + (i.precio * i.cantidad), 0);
     const fecha = new Date();
 
-    // 1. GUARDAR VENTA EN FIREBASE
     const venta = {
-        fecha: fecha,
-        total: total,
-        cajero: usuarioActivo.nombre,
+        fecha: fecha, total: total, cajero: usuarioActivo.nombre,
         items: carrito.map(i => ({
-            nombre: i.nombre,
-            precio: i.precio,
-            cantidad: i.cantidad,
-            subtotal: i.precio * i.cantidad
+            nombre: i.nombre, precio: i.precio, cantidad: i.cantidad, subtotal: i.precio * i.cantidad
         }))
     };
-
     await db.collection('ventas').add(venta);
 
-    // 2. ACTUALIZAR STOCK
     for (const item of carrito) {
         const producto = productos.find(p => p.id === item.id);
         if (producto) {
@@ -781,12 +677,10 @@ async function cobrarVenta() {
         }
     }
 
-    // 3. GENERAR TICKET
     document.getElementById('ticket-fecha').textContent = fecha.toLocaleDateString('es-MX');
     document.getElementById('ticket-hora').textContent = fecha.toLocaleTimeString('es-MX');
     document.getElementById('ticket-cajero').textContent = usuarioActivo.nombre;
     document.getElementById('ticket-total').textContent = `$${total.toFixed(2)}`;
-    
     const articulos = document.getElementById('ticket-articulos');
     articulos.innerHTML = '';
     carrito.forEach(i => {
@@ -798,60 +692,126 @@ async function cobrarVenta() {
         `;
     });
 
-    // 4. ABRIR CAJA REGISTRADORA
     abrirCaja();
-
-    // 5. IMPRIMIR TICKET
     document.getElementById('ticket-impresion').classList.add('visible');
     setTimeout(() => {
         window.print();
         document.getElementById('ticket-impresion').classList.remove('visible');
     }, 300);
 
-    // 6. LIMPIAR Y RECARGAR
     carrito = [];
     actualizarCarrito();
     await cargarProductos();
     await cargarProductosTabla();
     await cargarVentas();
-
     alert(`✅ ¡Venta registrada!\nTotal: $${total.toFixed(2)}\nTicket enviado a impresora\nCaja abierta`);
 }
 
-// ===== VENTAS / REPORTES =====
+// ===== COMPRAS =====
+function cargarProductosEnCompra() {
+    const select = document.getElementById('compra-producto');
+    select.innerHTML = '';
+    productos.forEach(p => {
+        let opt = document.createElement('option');
+        opt.value = p.id;
+        opt.textContent = p.nombre;
+        select.appendChild(opt);
+    });
+}
+
+function agregarLineaCompra() {
+    const prodId = document.getElementById('compra-producto').value;
+    const cant = parseFloat(document.getElementById('compra-cantidad').value);
+    const costo = parseFloat(document.getElementById('compra-costo').value);
+    if (!prodId || !cant || cant <= 0 || !costo || costo <= 0) {
+        alert('⚠️ Completa todos los datos correctamente'); return;
+    }
+    const prod = productos.find(p => p.id === prodId);
+    lineasCompra.push({
+        idProd: prodId, nombre: prod.nombre, cantidad: cant,
+        costoUnitario: costo, subtotal: cant * costo
+    });
+    actualizarTablaCompra();
+    document.getElementById('compra-cantidad').value = '';
+    document.getElementById('compra-costo').value = '';
+}
+
+function actualizarTablaCompra() {
+    const tbody = document.getElementById('tabla-compra-body');
+    tbody.innerHTML = '';
+    let total = 0;
+    lineasCompra.forEach((l, i) => {
+        total += l.subtotal;
+        tbody.innerHTML += `
+            <tr>
+                <td>${l.nombre}</td>
+                <td>${l.cantidad}</td>
+                <td>$${l.costoUnitario.toFixed(2)}</td>
+                <td>$${l.subtotal.toFixed(2)}</td>
+                <td><button class="btn-eliminar" onclick="quitarLineaCompra(${i})">X</button></td>
+            </tr>`;
+    });
+    document.getElementById('compra-total').textContent = total.toFixed(2);
+}
+
+function quitarLineaCompra(indice) {
+    lineasCompra.splice(indice, 1);
+    actualizarTablaCompra();
+}
+
+async function guardarCompra() {
+    if (lineasCompra.length === 0) { alert('⚠️ Agrega productos a la compra'); return; }
+    const fecha = document.getElementById('compra-fecha').value || new Date().toISOString().slice(0,10);
+    const proveedor = document.getElementById('compra-proveedor').value.trim() || 'Sin proveedor';
+    const total = lineasCompra.reduce((s,l)=>s+l.subtotal,0);
+
+    for (let linea of lineasCompra) {
+        const prod = productos.find(p => p.id === linea.idProd);
+        if (prod) {
+            const nuevoStock = (prod.stock || 0) + linea.cantidad;
+            await db.collection('productos').doc(linea.idProd).update({ stock: nuevoStock });
+        }
+    }
+
+    await db.collection('compras').add({
+        fecha, proveedor, lineas: lineasCompra, total, fechaRegistro: new Date()
+    });
+
+    alert('✅ Compra guardada y stock actualizado');
+    limpiarCompra();
+    await cargarProductos();
+}
+
+function limpiarCompra() {
+    lineasCompra = [];
+    actualizarTablaCompra();
+    document.getElementById('compra-proveedor').value = '';
+    document.getElementById('compra-fecha').value = new Date().toISOString().slice(0,10);
+}
+
+// ===== REPORTES =====
 async function cargarVentas() {
     const snap = await db.collection('ventas').orderBy('fecha', 'desc').limit(50).get();
     const tbody = document.querySelector('#tabla-ventas tbody');
     tbody.innerHTML = '';
-    
     let totalDia = 0;
     const hoy = new Date().toDateString();
-    
     snap.forEach(doc => {
         const v = doc.data();
         const fechaV = v.fecha.toDate();
         const fechaStr = fechaV.toLocaleDateString('es-MX');
         const horaStr = fechaV.toLocaleTimeString('es-MX');
-        
-        if (fechaV.toDateString() === hoy) {
-            totalDia += v.total;
-        }
-        
+        if (fechaV.toDateString() === hoy) totalDia += v.total;
         tbody.innerHTML += `
             <tr>
                 <td>${fechaStr} ${horaStr}</td>
-                <td style="font-weight: bold; color: var(--exito);">$${v.total.toFixed(2)}</td>
+                <td style="font-weight:bold; color:var(--exito);">$${v.total.toFixed(2)}</td>
                 <td>${v.cajero}</td>
-                <td><button class="btn-eliminar" onclick="verTicket('${doc.id}')">Ticket</button></td>
+                <td><button class="btn-eliminar" onclick="alert('Reimpresión en desarrollo')">Ticket</button></td>
             </tr>
         `;
     });
-    
     document.getElementById('ventas-dia').textContent = `$${totalDia.toFixed(2)}`;
-}
-
-function verTicket(id) {
-    alert('Función de reimpresión de ticket en desarrollo');
 }
 
 // ===== CIERRE DE CAJA =====
@@ -860,7 +820,6 @@ async function generarCierre() {
     let total = 0;
     let cantidad = 0;
     const hoy = new Date().toDateString();
-    
     snap.forEach(doc => {
         const v = doc.data();
         if (v.fecha.toDate().toDateString() === hoy) {
@@ -868,11 +827,9 @@ async function generarCierre() {
             cantidad++;
         }
     });
-    
     document.getElementById('cierre-total').textContent = `$${total.toFixed(2)}`;
     document.getElementById('cierre-cantidad').textContent = cantidad;
-    
-    alert(`🧾 CIERRE DE CAJA\n\nFecha: ${new Date().toLocaleDateString('es-MX')}\nCajero: ${usuarioActivo.nombre}\nTotal Ventas: $${total.toFixed(2)}\nCantidad de Ventas: ${cantidad}\n\n¡Cierre generado correctamente!`);
+    alert(`🧾 CIERRE DE CAJA\n\nFecha: ${new Date().toLocaleDateString('es-MX')}\nCajero: ${usuarioActivo.nombre}\nTotal Ventas: $${total.toFixed(2)}\nCantidad de Ventas: ${cantidad}\n\n✅ ¡Cierre generado!`);
 }
 
 // ===== USUARIOS =====
@@ -894,7 +851,6 @@ async function cargarUsuarios() {
         `;
     });
 }
-
 async function eliminarUsuario(id) {
     if (!confirm('¿Eliminar este usuario?')) return;
     await db.collection('usuarios').doc(id).delete();
@@ -903,150 +859,13 @@ async function eliminarUsuario(id) {
 
 // ===== RECUPERAR SESIÓN =====
 window.onload = function() {
+    document.getElementById('compra-fecha').value = new Date().toISOString().slice(0,10);
     const guardado = localStorage.getItem('usuarioActivo');
     if (guardado) {
         usuarioActivo = JSON.parse(guardado);
         entrarAlSistema();
     }
 };
-            // ========================================
-        // ✅ CIERRE DE CAJA DIARIO — PROBLEMA 2 RESUELTO
-        // ========================================
-        
-        // Actualiza los totales de caja en pantalla
-        async function actualizarCaja() {
-            const hoy = new Date();
-            hoy.setHours(0, 0, 0, 0);
-            const manana = new Date(hoy);
-            manana.setDate(manana.getDate() + 1);
-
-            try {
-                const snapshot = await db.collection('ventas')
-                    .where('fecha', '>=', hoy)
-                    .where('fecha', '<', manana)
-                    .where('cajeroUid', '==', usuarioActivo.uid)
-                    .get();
-
-                let totalVentas = 0;
-                let totalProductos = 0;
-                let cantidadVentas = 0;
-
-                snapshot.forEach(doc => {
-                    const v = doc.data();
-                    totalVentas += v.total;
-                    v.productos.forEach(p => totalProductos += p.cantidad);
-                    cantidadVentas++;
-                });
-
-                // Actualizar en pantalla
-                const elVentasDia = document.getElementById('cajaVentasDia');
-                const elProductos = document.getElementById('cajaProductos');
-                const elTotal = document.getElementById('cajaTotal');
-
-                if (elVentasDia) elVentasDia.textContent = `$${totalVentas.toFixed(2)}`;
-                if (elProductos) elProductos.textContent = totalProductos;
-                if (elTotal) elTotal.textContent = `$${totalVentas.toFixed(2)}`;
-
-            } catch (e) {
-                console.error('❌ Error actualizando caja:', e);
-            }
-        }
-
-        // Realizar el cierre de caja del día
-        async function cerrarCaja() {
-            if (!confirm('⚠️ ¿CONFIRMAR CIERRE DE CAJA DIARIO?\n\n✅ Se calcularán todas las ventas de hoy.\n✅ Se guardará el registro permanentemente.\n⚠️ Una vez hecho, NO se puede modificar.\n\n¿Continuar?')) {
-                return;
-            }
-
-            const hoy = new Date();
-            hoy.setHours(0, 0, 0, 0);
-            const manana = new Date(hoy);
-            manana.setDate(manana.getDate() + 1);
-
-            try {
-                const snapshot = await db.collection('ventas')
-                    .where('fecha', '>=', hoy)
-                    .where('fecha', '<', manana)
-                    .where('cajeroUid', '==', usuarioActivo.uid)
-                    .get();
-
-                let totalVentas = 0;
-                let totalProductos = 0;
-                const ventasDetalle = [];
-
-                snapshot.forEach(doc => {
-                    const v = doc.data();
-                    totalVentas += v.total;
-                    v.productos.forEach(p => totalProductos += p.cantidad);
-                    ventasDetalle.push({ id: doc.id, ...v });
-                });
-
-                // Guardar el cierre en Firestore
-                await db.collection('cierresCaja').add({
-                    fechaCorte: firebase.firestore.FieldValue.serverTimestamp(),
-                    fecha: new Date(),
-                    cajero: usuarioActivo.usuario,
-                    cajeroUid: usuarioActivo.uid,
-                    totalVentas: totalVentas,
-                    totalProductos: totalProductos,
-                    cantidadVentas: ventasDetalle.length,
-                    detalleVentas: ventasDetalle
-                });
-
-                // Mensaje de confirmación
-                alert(`✅ === CIERRE DE CAJA REALIZADO ===\n\n📅 Fecha: ${new Date().toLocaleDateString('es-MX')}\n👤 Cajero: ${usuarioActivo.usuario}\n💰 TOTAL VENTAS: $${totalVentas.toFixed(2)}\n📦 Productos vendidos: ${totalProductos}\n🧾 Ventas realizadas: ${ventasDetalle.length}\n\n✅ ¡Cierre guardado exitosamente!`);
-
-                // Recargar datos
-                await cargarCierres();
-                await actualizarCaja();
-
-            } catch (e) {
-                console.error('❌ Error en cierre de caja:', e);
-                alert('❌ Error al realizar cierre: ' + e.message);
-            }
-        }
-
-        // Cargar historial de cierres
-        async function cargarCierres() {
-            const tabla = document.getElementById('listaCierres');
-            if (!tabla) return;
-            tabla.innerHTML = '';
-
-            try {
-                const snapshot = await db.collection('cierresCaja')
-                    .orderBy('fechaCorte', 'desc')
-                    .where('cajeroUid', '==', usuarioActivo.uid)
-                    .limit(30)
-                    .get();
-
-                if (snapshot.empty) {
-                    tabla.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#94a3b8; padding:2rem;">📭 No hay cierres de caja registrados</td></tr>';
-                    return;
-                }
-
-                snapshot.forEach(doc => {
-                    const c = doc.data();
-                    const fecha = c.fechaCorte?.toDate() || new Date();
-                    tabla.innerHTML += `
-                        <tr>
-                            <td>${fecha.toLocaleDateString('es-MX')} ${fecha.toLocaleTimeString('es-MX', {hour:'2-digit', minute:'2-digit'})}</td>
-                            <td>${c.cajero}</td>
-                            <td>$${(c.totalVentas || 0).toFixed(2)}</td>
-                            <td>${c.totalProductos || 0}</td>
-                        </tr>
-                    `;
-                });
-            } catch (e) {
-                console.error('❌ Error cargando cierres:', e);
-            }
-        }
-
-        // Imprimir reporte de cierre
-        function imprimirCierre() {
-            alert('🖨️ Generando reporte de cierre de caja...\n\nSe abrirá la ventana de impresión.');
-            window.print();
-        }
 </script>
-
 </body>
 </html>

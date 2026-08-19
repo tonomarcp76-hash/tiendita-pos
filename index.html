@@ -164,6 +164,91 @@ td:nth-child(4), th:nth-child(4) {
         th, td { padding: 12px 10px; text-align: left; border-bottom: 1px solid var(--borde); font-size: 14px; }
         th { background: #f8fafc; font-weight: 600; color: var(--primario); }
         .btn-eliminar { background: var(--peligro); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+    /* ====== ESTILOS SECCIÓN COMPRAS — PROVEEDORES Y ACTUALIZACIÓN DE INVENTARIO ====== */
+.formulario-compra {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
+}
+.fila-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+.campo label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--texto);
+}
+.input-campo, .input-select {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 2px solid var(--borde);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+.input-campo:focus, .input-select:focus {
+    outline: none;
+    border-color: var(--primario);
+}
+.carrito-compra {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.carrito-compra h3 {
+    margin-bottom: 1.5rem;
+    color: var(--primario);
+    border-bottom: 2px solid var(--borde);
+    padding-bottom: 0.75rem;
+}
+.compra-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--borde);
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.compra-item .info {
+    flex: 1;
+    min-width: 200px;
+}
+.compra-item .subtotal {
+    font-weight: 700;
+    color: var(--exito);
+    font-size: 1.1rem;
+}
+.compra-item button {
+    background: var(--peligro);
+    color: white;
+    border: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+.total-compra {
+    margin-top: 1.5rem;
+    padding: 1.25rem;
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    border-radius: 8px;
+    text-align: right;
+    font-size: 1.4rem;
+    color: var(--exito);
+}
+.sin-datos {
+    text-align: center;
+    color: var(--gris);
+    padding: 2rem;
+}
     </style>
 </head>
 <body>

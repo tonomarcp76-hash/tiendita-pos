@@ -5,585 +5,139 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🏪 Tiendita - Punto de Venta</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, Arial, sans-serif; }
-        :root {
-            --primario: #2563eb; --secundario: #1e40af; --exito: #16a34a;
-            --advertencia: #f59e0b; --peligro: #dc2626; --fondo: #f1f5f9;
-            --blanco: #ffffff; --texto: #1e293b; --gris: #94a3b8;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        body { background: var(--fondo); min-height: 100vh; }
-        .oculto { display: none !important; }
-        
-        /* === PANTALLA DE ENTRADA === */
-        .entrada-container {
-            min-height: 100vh;
-            display: flex; align-items: center; justify-content: center;
-            background: linear-gradient(135deg, var(--primario), var(--secundario));
-            padding: 20px;
-        }
-        .entrada-card {
-            background: var(--blanco); padding: 50px 40px; border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2); width: 100%; max-width: 450px; text-align: center;
-        }
-        .entrada-card h1 { color: var(--primario); margin-bottom: 10px; font-size: 32px; }
-        .entrada-card p { color: var(--gris); margin-bottom: 30px; font-size: 16px; }
-        .grupo-input { margin-bottom: 25px; text-align: left; }
-        .grupo-input label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--texto); }
-        .grupo-input input {
-            width: 100%; padding: 15px; border: 2px solid #e2e8f0; border-radius: 8px;
-            font-size: 16px; transition: border-color 0.3s;
-        }
-        .grupo-input input:focus { outline: none; border-color: var(--primario); }
-        .btn {
-            width: 100%; padding: 16px; border: none; border-radius: 8px;
-            font-size: 18px; font-weight: 600; cursor: pointer; transition: transform 0.2s;
-        }
-        .btn:active { transform: scale(0.98); }
-        .btn-primario { background: var(--primario); color: white; }
-        
-        /* === SISTEMA PRINCIPAL === */
-        .header {
-            background: var(--blanco); padding: 15px 30px; display: flex;
-            justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); flex-wrap: wrap;
-        }
-        .nav-botones { display: flex; gap: 10px; flex-wrap: wrap; }
-        .nav-btn {
-            padding: 10px 18px; border: none; border-radius: 8px;
-            background: #e2e8f0; color: var(--texto); font-weight: 500; cursor: pointer; transition: all 0.2s;
-        }
-        .nav-btn.activo, .nav-btn:hover { background: var(--primario); color: white; }
-        .contenido { padding: 30px; max-width: 1400px; margin: 0 auto; }
-        .vista { display: none; }
-        .vista.activa { display: block; }
-        .tarjeta {
-            background: var(--blanco); padding: 25px; border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px;
-        }
-        .fila { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
-        .campo { flex: 1; min-width: 200px; }
-        .campo label { display: block; margin-bottom: 6px; font-weight: 500; }
-        .campo input, .campo select {
-            width: 100%; padding: 10px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 15px;
-        }
-        .btn-accion {
-            padding: 10px 16px; border: none; border-radius: 6px; cursor: pointer;
-            font-weight: 600; margin-right: 8px; margin-bottom: 8px;
-        }
-        .btn-verde { background: var(--exito); color: white; }
-        .btn-azul { background: var(--primario); color: white; }
-        .btn-rojo { background: var(--peligro); color: white; }
-        .btn-naranja { background: var(--advertencia); color: white; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
-        th { background: #f8fafc; font-weight: 600; }
-        .total-grande { font-size: 32px; font-weight: 700; color: var(--exito); text-align: right; margin-top: 20px; }
-        .usuario-actual { font-weight: 600; color: var(--primario); }
-    </style>
 
-    <!-- === FIREBASE === -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+        body {
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 50%, #207cca 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #1e5799;
+            font-size: 24px;
+            margin-top: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #1e5799;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #1e5799;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #154377;
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .link a {
+            color: #1e5799;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-
-    <!-- ====================================== -->
-    <!-- PANTALLA DE ENTRADA (SIN CONTRASEÑA) -->
-    <!-- ====================================== -->
-    <div class="entrada-container" id="pantallaEntrada">
-        <div class="entrada-card">
-            <h1>🏪 TIENDITA - PUNTO DE VENTA</h1>
-            <p>Ingresa tu nombre para comenzar</p>
-            <div class="grupo-input">
-                <label>Nombre del Cajero</label>
-                <input type="text" id="nombreCajero" placeholder="Escribe tu nombre aquí..." autocomplete="off">
+    <div class="login-container">
+        <div class="logo">
+            <span style="font-size: 48px;">🏪</span>
+            <h1>Tiendita POS</h1>
+        </div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="usuario">Usuario</label>
+                <input type="text" id="usuario" value="TONO" required>
             </div>
-            <button class="btn btn-primario" onclick="entrarAlSistema()">🚀 ENTRAR AL SISTEMA</button>
+            
+            <div class="form-group">
+                <label for="contrasena">Contraseña</label>
+                <input type="password" id="contrasena" required>
+            </div>
+            
+            <button type="submit" class="btn">Iniciar Sesión</button>
+        </form>
+        
+        <div class="link">
+            <a href="#">¿No tienes cuenta? Registrar cajero nuevo</a>
         </div>
     </div>
 
-    <!-- ====================================== -->
-    <!-- SISTEMA PRINCIPAL -->
-    <!-- ====================================== -->
-    <div id="sistemaPrincipal" class="oculto">
-        <header class="header">
-            <h2>🏪 Tiendita - Punto de Venta</h2>
-            <div>
-                <span class="usuario-actual" id="nombreUsuario"></span>
-                <button class="nav-btn" onclick="salirDelSistema()" style="margin-left:15px;">🚪 Salir</button>
-            </div>
-        </header>
-
-        <nav class="header" style="justify-content: center; gap:10px; flex-wrap: wrap;">
-            <button class="nav-btn activo" onclick="mostrarVista('ventas')" id="btn-nav-ventas">🛒 Ventas</button>
-            <button class="nav-btn" onclick="mostrarVista('catalogo')" id="btn-nav-catalogo">📦 Catálogo</button>
-            <button class="nav-btn" onclick="mostrarVista('compras')" id="btn-nav-compras">📥 Compras</button>
-            <button class="nav-btn" onclick="mostrarVista('reportes')" id="btn-nav-reportes">📊 Reportes</button>
-            <button class="nav-btn" onclick="mostrarVista('cierre')" id="btn-nav-cierre">💰 Cierre de Caja</button>
-        </nav>
-
-        <main class="contenido">
-            <!-- ===== VENTAS ===== -->
-            <div class="vista activa" id="vista-ventas">
-                <div class="tarjeta">
-                    <h2>🛒 Nueva Venta</h2>
-                    <div class="fila">
-                        <div class="campo">
-                            <label>Buscar Producto</label>
-                            <input type="text" id="buscarProducto" placeholder="Escribe nombre..." oninput="buscarEnCatalogo()">
-                        </div>
-                        <div class="campo">
-                            <label>Cantidad</label>
-                            <input type="number" id="cantidadVenta" value="1" min="1">
-                        </div>
-                        <button class="btn-accion btn-verde" onclick="agregarAVenta()">➕ Agregar</button>
-                    </div>
-                    
-                    <table id="tablaVenta">
-                        <thead><tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Subtotal</th><th>Acción</th></tr></thead>
-                        <tbody id="cuerpoVenta"></tbody>
-                    </table>
-                    
-                    <div class="total-grande">Total: $<span id="totalVenta">0.00</span></div>
-                    
-                    <div style="margin-top:25px; display:flex; gap:15px; flex-wrap:wrap;">
-                        <button class="btn-accion btn-verde" style="font-size:18px; padding:15px 30px;" onclick="cobrarVenta()">💵 COBRAR E IMPRIMIR TICKET</button>
-                        <button class="btn-accion btn-azul" style="font-size:18px; padding:15px 30px;" onclick="abrirCaja()">🔓 ABRIR CAJA</button>
-                        <button class="btn-accion btn-naranja" style="font-size:18px; padding:15px 30px;" onclick="limpiarVenta()">🗑️ NUEVA VENTA</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ===== CATÁLOGO ===== -->
-            <div class="vista" id="vista-catalogo">
-                <div class="tarjeta">
-                    <h2>📦 Catálogo de Productos</h2>
-                    <div class="fila">
-                        <div class="campo"><label>Nombre</label><input type="text" id="prodNombre" placeholder="Nombre del producto"></div>
-                        <div class="campo"><label>Precio Venta</label><input type="number" id="prodPrecio" step="0.01" placeholder="0.00"></div>
-                        <div class="campo"><label>Stock</label><input type="number" id="prodStock" min="0" placeholder="0"></div>
-                        <button class="btn-accion btn-verde" onclick="guardarProducto()">💾 Guardar Producto</button>
-                    </div>
-                    <table id="tablaCatalogo">
-                        <thead><tr><th>Nombre</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr></thead>
-                        <tbody id="cuerpoCatalogo"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- ===== COMPRAS ===== -->
-            <div class="vista" id="vista-compras">
-                <div class="tarjeta">
-                    <h2>📥 Registro de Compras / Entradas</h2>
-                    <div class="fila">
-                        <div class="campo"><label>Producto</label><input type="text" id="compraNombre" placeholder="Nombre del producto"></div>
-                        <div class="campo"><label>Cantidad</label><input type="number" id="compraCantidad" min="1" placeholder="1"></div>
-                        <div class="campo"><label>Precio Compra</label><input type="number" id="compraPrecio" step="0.01" placeholder="0.00"></div>
-                        <button class="btn-accion btn-verde" onclick="registrarCompra()">✅ Registrar Compra</button>
-                    </div>
-                    <table id="tablaCompras">
-                        <thead><tr><th>Fecha</th><th>Producto</th><th>Cantidad</th><th>Precio Unitario</th><th>Total</th></tr></thead>
-                        <tbody id="cuerpoCompras"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- ===== REPORTES ===== -->
-            <div class="vista" id="vista-reportes">
-                <div class="tarjeta">
-                    <h2>📊 Reporte Semanal de Ventas</h2>
-                    <div id="contenidoReporte" style="margin:20px 0;">
-                        <p style="font-size:20px; margin:10px 0;">Total Vendido Semanal: <strong style="color:var(--exito); font-size:28px;">$<span id="totalSemanal">0.00</span></strong></p>
-                        <p style="font-size:18px;">Ventas Realizadas: <strong id="cantidadVentas">0</strong></p>
-                    </div>
-                    <table id="tablaReportes">
-                        <thead><tr><th>Fecha</th><th>Hora</th><th>Productos</th><th>Total</th><th>Cajero</th></tr></thead>
-                        <tbody id="cuerpoReportes"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- ===== CIERRE DE CAJA ===== -->
-            <div class="vista" id="vista-cierre">
-                <div class="tarjeta">
-                    <h2>💰 Cierre de Caja</h2>
-                    <div style="font-size:20px; line-height:2.5; margin:20px 0;">
-                        <p><strong>Fecha:</strong> <span id="cierre-fecha"></span></p>
-                        <p><strong>Cajero:</strong> <span id="cierre-cajero"></span></p>
-                        <p><strong>Total Ventas del Día:</strong> <span id="cierre-total" style="color:var(--exito); font-weight:bold;">$0.00</span></p>
-                        <p><strong>Ventas Realizadas:</strong> <span id="cierre-cantidad">0</span></p>
-                    </div>
-                    <button class="btn-accion btn-verde" style="font-size:18px; padding:15px 30px;" onclick="hacerCierre()">✅ HACER CIERRE DE CAJA</button>
-                    <button class="btn-accion btn-azul" style="font-size:18px; padding:15px 30px; margin-left:10px;" onclick="reiniciarCierre()">🔄 Reiniciar Conteo</button>
-                    
-                    <h3 style="margin-top:40px; border-top:2px solid #eee; padding-top:20px;">📜 Historial de Cierres</h3>
-                    <table id="tablaCierres">
-                        <thead><tr><th>Fecha</th><th>Cajero</th><th>Total</th><th>Ventas</th></tr></thead>
-                        <tbody id="cuerpoCierres"></tbody>
-                    </table>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- ====================================== -->
-    <!-- JAVASCRIPT: FIREBASE + FUNCIONES -->
-    <!-- ====================================== -->
     <script>
-        // === CONFIGURACIÓN FIREBASE ===
-        const firebaseConfig = {
-            apiKey: "AQUÍ-TU-API-KEY",
-            authDomain: "tu-proyecto.firebaseapp.com",
-            projectId: "tu-proyecto",
-            storageBucket: "tu-proyecto.appspot.com",
-            messagingSenderId: "1234567890",
-            appId: "1:1234567890:web:abc123def456"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        let cajeroActual = '';
-        let carrito = [];
-        let ventaTotal = 0;
-
-        // === ENTRAR AL SISTEMA (SIN CONTRASEÑA) ===
-        function entrarAlSistema() {
-            const nombre = document.getElementById('nombreCajero').value.trim();
-            if (!nombre) return alert('⚠️ Escribe tu nombre para continuar');
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const usuario = document.getElementById('usuario').value;
+            const contrasena = document.getElementById('contrasena').value;
             
-            cajeroActual = nombre;
-            document.getElementById('pantallaEntrada').classList.add('oculto');
-            document.getElementById('sistemaPrincipal').classList.remove('oculto');
-            document.getElementById('nombreUsuario').textContent = '👤 ' + cajeroActual;
-            
-            // Cargar datos
-            cargarCatalogo();
-            cargarReportes();
-            cargarHistorialCierres();
-            actualizarFechaCierre();
-        }
-
-        // === SALIR DEL SISTEMA ===
-        function salirDelSistema() {
-            if (!confirm('¿Seguro que quieres salir?')) return;
-            document.getElementById('sistemaPrincipal').classList.add('oculto');
-            document.getElementById('pantallaEntrada').classList.remove('oculto');
-            document.getElementById('nombreCajero').value = '';
-            carrito = [];
-            ventaTotal = 0;
-        }
-
-        // === NAVEGACIÓN ENTRE VISTAS ===
-        function mostrarVista(nombre) {
-            document.querySelectorAll('.vista').forEach(v => v.classList.remove('activa'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('activo'));
-            document.getElementById(`vista-${nombre}`).classList.add('activa');
-            document.getElementById(`btn-nav-${nombre}`).classList.add('activo');
-        }
-
-        // === AGREGAR PRODUCTO A VENTA ===
-        async function agregarAVenta() {
-            const nombre = document.getElementById('buscarProducto').value.trim();
-            const cantidad = parseInt(document.getElementById('cantidadVenta').value) || 1;
-            if (!nombre) return alert('Escribe el nombre del producto');
-            
-            const snap = await db.collection('productos').where('nombre', '==', nombre).get();
-            if (snap.empty) return alert('⚠️ Producto no encontrado en el catálogo');
-            
-            snap.forEach(doc => {
-                const prod = doc.data();
-                const subtotal = prod.precio * cantidad;
-                carrito.push({ id: doc.id, nombre: prod.nombre, precio: prod.precio, cantidad, subtotal });
-                actualizarTablaVenta();
-            });
-            document.getElementById('buscarProducto').value = '';
-        }
-
-        // === ACTUALIZAR TABLA VENTA ===
-        function actualizarTablaVenta() {
-            const cuerpo = document.getElementById('cuerpoVenta');
-            cuerpo.innerHTML = '';
-            ventaTotal = 0;
-            carrito.forEach((item, idx) => {
-                ventaTotal += item.subtotal;
-                cuerpo.innerHTML += `
-                    <tr>
-                        <td>${item.nombre}</td>
-                        <td>$${item.precio.toFixed(2)}</td>
-                        <td>${item.cantidad}</td>
-                        <td>$${item.subtotal.toFixed(2)}</td>
-                        <td><button class="btn-accion btn-rojo" onclick="quitarDelCarrito(${idx})">❌ Quitar</button></td>
-                    </tr>`;
-            });
-            document.getElementById('totalVenta').textContent = ventaTotal.toFixed(2);
-        }
-
-        function quitarDelCarrito(idx) {
-            carrito.splice(idx, 1);
-            actualizarTablaVenta();
-        }
-
-        function limpiarVenta() {
-            carrito = [];
-            ventaTotal = 0;
-            actualizarTablaVenta();
-        }
-
-        // === COBRAR + TICKET + ABRIR CAJA ===
-        async function cobrarVenta() {
-            if (carrito.length === 0) return alert('⚠️ Agrega productos primero');
-            
-            const fecha = new Date();
-            const datosVenta = {
-                fecha: fecha.toLocaleDateString(),
-                hora: fecha.toLocaleTimeString(),
-                cajero: cajeroActual,
-                productos: carrito,
-                total: ventaTotal
-            };
-
-            // Guardar venta en Firebase
-            await db.collection('ventas').add(datosVenta);
-
-            // Descontar stock
-            for (const item of carrito) {
-                const snap = await db.collection('productos').doc(item.id).get();
-                if (snap.exists) {
-                    const stockActual = snap.data().stock || 0;
-                    await db.collection('productos').doc(item.id).update({ stock: stockActual - item.cantidad });
-                }
-            }
-
-            // Abrir caja registradora física
-            abrirCaja();
-
-            // Imprimir ticket
-            imprimirTicket(datosVenta);
-
-            alert('✅ Venta realizada con éxito!');
-            limpiarVenta();
-            cargarCatalogo();
-            cargarReportes();
-        }
-
-        // === ABRIR CAJA REGISTRADORA FÍSICA ===
-        function abrirCaja() {
-            // Comando estándar para impresoras térmicas compatibles
-            const comandoAbrirCaja = '\x1B\x70\x00\x19\xFA';
-            console.log('🔓 Comando abrir caja enviado:', comandoAbrirCaja);
-            alert('🔓 Caja registradora abierta');
-        }
-
-        // === IMPRIMIR TICKET ===
-        function imprimirTicket(venta) {
-            let ticket = `
-====================================
-        TIENDITA - PUNTO DE VENTA
-====================================
-Fecha: ${venta.fecha}   Hora: ${venta.hora}
-Cajero: ${venta.cajero}
-------------------------------------
-PRODUCTO            CANT  PRECIO  SUBT
-`;
-            venta.productos.forEach(p => {
-                ticket += `${p.nombre.padEnd(16)} ${String(p.cantidad).padStart(3)} $${String(p.precio.toFixed(2)).padStart(6)} $${String(p.subtotal.toFixed(2)).padStart(6)}\n`;
-            });
-            ticket += `
-------------------------------------
-TOTAL: $${venta.total.toFixed(2)}
-====================================
-      ¡GRACIAS POR SU COMPRA!
-====================================
-`;
-            console.log('🧾 TICKET:\n', ticket);
-            window.print();
-        }
-
-        // === CATÁLOGO: CARGAR ===
-        async function cargarCatalogo() {
-            const snap = await db.collection('productos').orderBy('nombre').get();
-            const cuerpo = document.getElementById('cuerpoCatalogo');
-            cuerpo.innerHTML = '';
-            snap.forEach(doc => {
-                const p = doc.data();
-                cuerpo.innerHTML += `
-                    <tr>
-                        <td>${p.nombre}</td>
-                        <td>$${p.precio.toFixed(2)}</td>
-                        <td>${p.stock || 0}</td>
-                        <td>
-                            <button class="btn-accion btn-rojo" onclick="eliminarProducto('${doc.id}')">🗑️ Eliminar</button>
-                        </td>
-                    </tr>`;
-            });
-        }
-
-        // === GUARDAR PRODUCTO ===
-        async function guardarProducto() {
-            const nombre = document.getElementById('prodNombre').value.trim();
-            const precio = parseFloat(document.getElementById('prodPrecio').value);
-            const stock = parseInt(document.getElementById('prodStock').value) || 0;
-            
-            if (!nombre || !precio) return alert('⚠️ Escribe nombre y precio del producto');
-            
-            await db.collection('productos').add({ nombre, precio, stock });
-            alert('✅ Producto guardado en el catálogo');
-            document.getElementById('prodNombre').value = '';
-            document.getElementById('prodPrecio').value = '';
-            document.getElementById('prodStock').value = '';
-            cargarCatalogo();
-        }
-
-        // === ELIMINAR PRODUCTO ===
-        async function eliminarProducto(id) {
-            if (!confirm('¿Seguro que quieres eliminar este producto?')) return;
-            await db.collection('productos').doc(id).delete();
-            alert('✅ Producto eliminado');
-            cargarCatalogo();
-        }
-
-        // === BUSCAR EN CATÁLOGO ===
-        function buscarEnCatalogo() {
-            // Se puede ampliar con filtro en tiempo real
-        }
-
-        // === COMPRAS: REGISTRAR ===
-        async function registrarCompra() {
-            const nombre = document.getElementById('compraNombre').value.trim();
-            const cantidad = parseInt(document.getElementById('compraCantidad').value);
-            const precio = parseFloat(document.getElementById('compraPrecio').value);
-            
-            if (!nombre || !cantidad || !precio) return alert('⚠️ Completa todos los campos');
-            
-            const fecha = new Date();
-            const total = cantidad * precio;
-            
-            // Registrar compra
-            await db.collection('compras').add({
-                fecha: fecha.toLocaleDateString(),
-                hora: fecha.toLocaleTimeString(),
-                nombre, cantidad, precioUnitario: precio, total,
-                cajero: cajeroActual
-            });
-
-            // Actualizar stock del producto
-            const snap = await db.collection('productos').where('nombre', '==', nombre).get();
-            if (!snap.empty) {
-                const doc = snap.docs[0];
-                const stockActual = doc.data().stock || 0;
-                await db.collection('productos').doc(doc.id).update({ stock: stockActual + cantidad });
+            // Aquí puedes agregar tu lógica de validación
+            if (usuario === 'TONO' && contrasena === '1234') {
+                alert('✅ ¡Bienvenido, ' + usuario + '!');
+                // window.location.href = 'menu.html'; // Redirigir al menú principal
             } else {
-                // Si no existe, lo crea con precio de venta = compra + 20%
-                await db.collection('productos').add({ 
-                    nombre, 
-                    precio: Math.round(precio * 1.2 * 100) / 100, 
-                    stock: cantidad 
-                });
+                alert('❌ Usuario o contraseña incorrectos');
             }
-
-            alert('✅ Compra registrada y stock actualizado');
-            document.getElementById('compraNombre').value = '';
-            document.getElementById('compraCantidad').value = '';
-            document.getElementById('compraPrecio').value = '';
-            cargarCompras();
-            cargarCatalogo();
-        }
-
-        // === CARGAR COMPRAS ===
-        async function cargarCompras() {
-            const snap = await db.collection('compras').orderBy('fecha', 'desc').limit(20).get();
-            const cuerpo = document.getElementById('cuerpoCompras');
-            cuerpo.innerHTML = '';
-            snap.forEach(doc => {
-                const c = doc.data();
-                cuerpo.innerHTML += `
-                    <tr>
-                        <td>${c.fecha} ${c.hora}</td>
-                        <td>${c.nombre}</td>
-                        <td>${c.cantidad}</td>
-                        <td>$${c.precioUnitario.toFixed(2)}</td>
-                        <td>$${c.total.toFixed(2)}</td>
-                    </tr>`;
-            });
-        }
-
-        // === REPORTES ===
-        async function cargarReportes() {
-            const snap = await db.collection('ventas').orderBy('fecha', 'desc').limit(50).get();
-            const cuerpo = document.getElementById('cuerpoReportes');
-            cuerpo.innerHTML = '';
-            let totalSemanal = 0;
-            snap.forEach(doc => {
-                const v = doc.data();
-                totalSemanal += v.total;
-                cuerpo.innerHTML += `
-                    <tr>
-                        <td>${v.fecha}</td>
-                        <td>${v.hora}</td>
-                        <td>${v.productos.length} productos</td>
-                        <td>$${v.total.toFixed(2)}</td>
-                        <td>${v.cajero}</td>
-                    </tr>`;
-            });
-            document.getElementById('totalSemanal').textContent = totalSemanal.toFixed(2);
-            document.getElementById('cantidadVentas').textContent = snap.size;
-        }
-
-        // === CIERRE DE CAJA ===
-        function actualizarFechaCierre() {
-            const hoy = new Date();
-            document.getElementById('cierre-fecha').textContent = hoy.toLocaleDateString();
-            document.getElementById('cierre-cajero').textContent = cajeroActual;
-        }
-
-        async function hacerCierre() {
-            const snap = await db.collection('ventas').get();
-            let total = 0;
-            snap.forEach(d => total += d.data().total);
-            
-            document.getElementById('cierre-total').textContent = '$' + total.toFixed(2);
-            document.getElementById('cierre-cantidad').textContent = snap.size;
-
-            // Guardar cierre en historial
-            await db.collection('cierres').add({
-                fecha: new Date().toLocaleDateString(),
-                cajero: cajeroActual,
-                total,
-                cantidadVentas: snap.size,
-                fechaHora: new Date()
-            });
-
-            alert('✅ Cierre de caja realizado y guardado en el historial');
-            cargarHistorialCierres();
-        }
-
-        async function reiniciarCierre() {
-            if (!confirm('⚠️ ¿Seguro de reiniciar? Se borrarán las ventas del día.')) return;
-            const snap = await db.collection('ventas').get();
-            const batch = db.batch();
-            snap.forEach(doc => batch.delete(doc.ref));
-            await batch.commit();
-            alert('✅ Conteo reiniciado a cero');
-            document.getElementById('cierre-total').textContent = '$0.00';
-            document.getElementById('cierre-cantidad').textContent = '0';
-            cargarCatalogo();
-            cargarReportes();
-        }
-
-        async function cargarHistorialCierres() {
-            const snap = await db.collection('cierres').orderBy('fechaHora', 'desc').limit(10).get();
-            const cuerpo = document.getElementById('cuerpoCierres');
-            cuerpo.innerHTML = '';
-            snap.forEach(doc => {
-                const c = doc.data();
-                cuerpo.innerHTML += `
-                    <tr>
-                        <td>${c.fecha}</td>
-                        <td>${c.cajero}</td>
-                        <td>$${c.total.toFixed(2)}</td>
-                        <td>${c.cantidadVentas}</td>
-                    </tr>`;
-            });
-        }
+        });
     </script>
 </body>
 </html>
